@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--扫描processor和coder包-->
+    <context:component-scan base-package="net.convnet.server.processor,net.convnet.server.protocol.bin.coder"/>
+    <context:annotation-config/>
+
+    <bean id="props" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location" value="classpath:application.properties"/>
+        <property name="fileEncoding" value="utf-8"/>
+    </bean>
+
+
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basenames" value="classpath:message/errors,classpath:message/messages"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+    </bean>
+
+    <bean class="net.convnet.server.support.message.NLS">
+        <property name="messageProvider">
+            <bean class="net.convnet.server.support.message.SpringMessageProvider">
+                <property name="messageSource" ref="messageSource"/>
+            </bean>
+        </property>
+    </bean>
+
+    <context:property-placeholder properties-ref="props"/>
+
+    <bean id="encryptService" class="net.convnet.server.support.encrypt.RSAEncryptServiceImpl">
+        <property name="encryptKey"
+                  value="MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBALa0vNfgloabI7gj9QxJlv/3wAId/W2sXVK4BQ4kt+9LsS7L7rbsCAQc695zqJqyiit++ITl6Fz/Oakz5vDsDtGAn2Eh/OP6lmPEop9Smafn7D9pFlJuVpjD6zt5a+M5ar2zkz/IGv0il0TYzLrUQKghTiSQP5DU43qV1v7+1LUBAgMBAAECgYEAjZMJjgJCwbUvfX2nYckYT+pLh5hzi2t3uSRNDoOXX774Yfm2VVoacA11HB/lM1JLzJ6LtndskbtXk+xa9K8GXzN/7ekyDBpRVm4uSYgcFzcr00Rs8EipmF24JTad1RSAVG7lp7dUZEgJeMYFhO1+MIhvkFFTUriC92avq+ReW9ECQQDflJJRgp1u+gl2n6We+AuVmZeKIIc00uoP9wJSqaOG6LVUpP8ERZYeo+fXx9odlUV8RNCwXWvq8GUXwaoc0y/tAkEA0TLjIl1iPn7X+w/84W5jBgqYvxrKqDOUc9wC6nZkfDlJGMtD1HvR2nqmrnxCprGbGfK5iwtQdE2NG8Ro3D9u5QJACsimugm7wDONK0yN93ntTRzoY0AoZVLa+UQnt4b5HTOyM0/2AOW+VOIA97Zq/cxKWrETA76tytondhrgMp25DQJAaMedHiQ5xeWQVg6O8XZxoKAEG4vWv2J+U3159GdyMwoaQ5HjmnSeCljuTWytkYJZliiNqEf1dxs0txisEMywxQJAE//uQXCZ+HRqeKQ3ckb1xYcXzqzuSCA1xdWhr+g81BQ5DvsARrg72aGTnCfkXfxwDfSa9qRPtFkuA8krc7g+7Q=="/>
+    </bean>
+
+    <bean id="userManager" class="net.convnet.server.identity.impl.UserManagerImpl">
+        <property name="encryptService" ref="encryptService"/>
+    </bean>
+
+    <bean id="groupManager" class="net.convnet.server.identity.impl.GroupManagerImpl"/>
+
+    <bean id="resetCodeManager" class="net.convnet.server.identity.impl.ResetCodeManagerImpl"/>
+
+    <bean id="cm" abstract="true" class="net.convnet.server.protocol.bin.CoderMapping"/>
+
+    <bean id="binaryProtocol" class="net.convnet.server.protocol.bin.BinaryProtocol">
+        <property name="coderMappings">
+            <list>
+                <bean parent="cm" p:cmd="ERROR" p:encode="code,msg"/>
+                <bean parent="cm" p:cmd="KEEP_ONLINE"/>
+                <bean parent="cm" p:cmd="SERVER_TRANS" p:decode="userId,payload"/>
+                <bean parent="cm" p:cmd="LOGIN" p:rCmd="LOGIN_RESP" p:decode="name,password,mac" p:encode="status,ip,id,nickName,name,password,description,p1,p2,p3,p4"/>
+                <bean parent="cm" p:cmd="LOGOUT" p:rCmd="LOGOUT_RESP"/>
+                <bean parent="cm" p:cmd="REGIST_USER" p:rCmd="REGIST_USER_RESP" p:decode="name,password,nickName,description" p:encode="status,info"/>
+
+                <bean parent="cm" p:cmd="GET_VERSION_RESP" p:encode="version,updateURL"/>
+                <bean parent="cm" p:cmd="GET_SERVER_PORT" p:rCmd="GET_SERVER_PORT_RESP" p:encode="updPorts"/>
+                <bean parent="cm" p:cmd="CALL_TO_USER_NEW_PORT" p:rCmd="CALL_TO_USER_NEW_PORT_RESP" p:decode="userid,udpport" p:encode="userid,updPort"/>
+
+
+                <bean parent="cm" p:cmd="ONLINE_TELL_RESP" p:encode="who"/>
+                <bean parent="cm" p:cmd="OFFLINE_TELL_RESP" p:encode="who"/>
+
+                <bean parent="cm" p:cmd="CHECK_NAT_TYPE"/>
+                <bean parent="cm" p:cmd="RENEW_USER_STATUS"/>
+                <bean parent="cm" p:cmd="ONLINE_TELL"/>
+                <bean parent="cm" p:cmd="KEEP_ONLINE"/>
+
+                <bean parent="cm" p:cmd="RENEW_USER_STATUS" p:decode="nattype,udpport,tcpport"/>
+                <bean parent="cm" p:cmd="CHECK_NAT_TYPE" p:decode="udpport,tcpport"/>
+                <bean parent="cm" p:cmd="GET_GROUP_DESC" p:rCmd="GET_GROUP_DESCRESP" p:decode="groupid" p:encode="groupdesc"/>
+                <bean parent="cm" p:cmd="MODIFY_GROUP" p:rCmd="MODIFY_GROUP_RESP" p:decode="groupid,name,desc,pass" p:encode="groupid"/>
+
+                <bean parent="cm" p:cmd="JOIN_GROUP" p:rCmd="JOIN_GROUP_RESP" p:decode="groupid,description,password" p:encode="username,userid,gourpid,gourpdesc,orderdesc"/>
+                <bean parent="cm" p:cmd="QUIT_GROUP" p:rCmd="QUIT_GROUP_RESP" p:decode="groupid"  p:encode="msgtype,groupid,userid"/>
+                <bean parent="cm" p:cmd="KICK_OUT" p:rCmd="KICK_OUT_RESP" p:decode="groupid,userid"  p:encode="groupid,userid"/>
+
+
+                <!--PEER_SURE_JOIN_GROUP_RESP的反馈对象为已有组内的成员，通知新用户加入-->
+                <bean parent="cm" p:cmd="PEER_SURE_JOIN_GROUP" p:rCmd="PEER_SURE_JOIN_GROUP_RESP" p:decode="isallow,userid,groupid" p:encode="groupid,whoid,name,isonline"/>
+
+
+                <bean parent="cm" p:cmd="PEER_ORD_FRIEND" p:rCmd="PEER_ORD_FRIEND_RESP" p:decode="id,description" p:encode="count,userId,nickName,description"/>
+                <bean parent="cm" p:cmd="PEER_SURE_FRIEND" p:rCmd="PEER_SURE_FRIEND_RESP" p:decode="id" p:encode="id,name,isonline"/>
+                <bean parent="cm" p:cmd="DEL_FRIEND" p:rCmd="DEL_FRIEND_RESP" p:decode="id" p:encode="id"/>
+
+
+                <bean parent="cm" p:cmd="PEER_REFUSED_FRIEND" p:rCmd="PEER_REFUSED_FRIEND_RESP" p:decode="id"/>
+                <bean parent="cm" p:rCmd="SERVER_SEND_TO_CLIENT" p:encode="message"/>
+
+
+
+                <bean parent="cm" p:cmd="SAMEIP_INFO" p:rCmd="SAMEIP_INFO_RESP" p:decode="targetid,myudpport,mytcpport,mymac,myinnerip" p:encode="callerid,callerudpport,callertcpport,callermac,callerinnerip"/>
+
+                <bean parent="cm" p:rCmd="USER_NEED_PASS" p:encode="id"/>
+                <bean parent="cm" p:cmd="ONLINE_TELL" p:encode="userid"/>
+
+                <bean parent="cm" p:cmd="CREATE_GROUP" p:rCmd="CREATE_GROUP_RESP" p:decode="groupname,groupdesc,gourppass" p:encode="iscreated"/>
+
+            </list>
+        </property>
+    </bean>
+
+    <bean id="protocolFactory" class="net.convnet.server.protocol.DefaultProtocolFactory">
+        <property name="protocols">
+            <list>
+                <ref bean="binaryProtocol"/>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="sessionManager" class="net.convnet.server.session.impl.SessionManagerImpl">
+        <property name="protocolFactory" ref="protocolFactory"/>
+        <property name="userManager" ref="userManager"/>
+    </bean>
+
+    <bean id="convnetServer" class="net.convnet.server.core.Server">
+        <property name="listen" value="${listen}"/>
+        <property name="poolSize" value="${poolSize}"/>
+        <property name="serverInitializer">
+            <bean class="net.convnet.server.core.ServerInitializer">
+                <property name="sessionManager" ref="sessionManager"/>
+                <property name="protocolFactory" ref="protocolFactory"/>
+            </bean>
+        </property>
+    </bean>
+
+    <bean id="udpPortDetectServer" class="net.convnet.server.core.UdpPortDetectServer">
+        <property name="ports" value="${udpPorts}"/>
+    </bean>
+
+</beans>

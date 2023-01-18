@@ -11,9 +11,12 @@ import net.convnet.server.protocol.Cmd;
 import net.convnet.server.protocol.Request;
 import net.convnet.server.protocol.Response;
 import net.convnet.server.session.Session;
+import net.convnet.server.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 
 @Service
 public class RegisterProcessor extends AbstractProcessor {
@@ -71,11 +74,14 @@ public class RegisterProcessor extends AbstractProcessor {
          } else {
             user.setPassword(request.getRequiredParam("password"));
          }
-
          user.setDescription(request.getParam("description"));
          user.setRegisterIp(session.getIp());
          user.setCanAddfriend(this.canJoinGroup);
          user.setCanCreateGroup(this.canCreateGroup);
+         user.setEnabled(true);
+         user.setReciveLimit(0L);
+         user.setSendLimit(0L);
+         user.setUpdateAt(DateUtil.getLocalDateTime(new Date()));
          this.userManager.saveUser(user);
          if (user != null && this.forceUseMailCheck) {
             ResetCode resetCode = this.resetCodeManager.createResetCode(user);

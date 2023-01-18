@@ -1,6 +1,7 @@
 package net.convnet.server.identity.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import net.convnet.server.ex.ConvnetException;
 import net.convnet.server.ex.EntityNotFoundException;
 import net.convnet.server.identity.*;
@@ -214,10 +215,27 @@ public class UserManagerImpl implements UserManager {
       if (user.getId() == null) {
          user.setCreateAt(DateUtil.getLocalDateTime(new Date()));
          //先插入，再获取
+         //TODO:寻找更合适的方案解决userid不自增的麻烦
+         QueryWrapper<User> wrapper = new QueryWrapper();
+         wrapper.orderByDesc("ID");
+         int id = userMapper.selectOne(wrapper).getId();
+         int newid = id + 1;
+         user.setId(newid);
+
+         if(user.getAdmin()==null)
+         {
+            user.setAdmin(false);
+         }
+
+         //使用不合理的手段自增完毕，并开始插入
          userMapper.insert(user);
+
          //需要我们手动初始化userEx并设置外键
          UserEx userEx = new UserEx();
+         userEx.setUserIsOnline(false);
          userEx.setUserId(user.getId());
+         userEx.setReciveFromServer(0L);
+         userEx.setSendToServer(0L);
          userExMapper.insert(userEx);
          this.setPassword(user, user.getPassword());
       }
@@ -294,8 +312,8 @@ public class UserManagerImpl implements UserManager {
             friend.setUserId(userid);
             friend.setFriendId(targetid);
             Friend friend2 = new Friend();
-            friend.setUserId(targetid);
-            friend.setFriendId(userid);
+            friend2.setUserId(targetid);
+            friend2.setFriendId(userid);
             friendMapper.insert(friend);
             friendMapper.insert(friend2);
          }

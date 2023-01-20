@@ -1,10 +1,12 @@
 package net.convnet.server.support.message;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+
 import java.util.Locale;
 
 public final class NLS {
    private static MessageProvider messageProvider;
-
    public void setMessageProvider(MessageProvider messageProvider) {
       NLS.messageProvider = messageProvider;
    }

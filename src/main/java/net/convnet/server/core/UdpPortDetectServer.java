@@ -36,7 +36,7 @@ public class UdpPortDetectServer implements Lifecycle, InitializingBean, Disposa
 
          try {
             Bootstrap bootstrap = new Bootstrap();
-            ((Bootstrap)bootstrap.group(this.group)).channel(NioDatagramChannel.class);
+            bootstrap.group(this.group).channel(NioDatagramChannel.class);
             int[] arr$ = this.ports;
             int len$ = arr$.length;
 

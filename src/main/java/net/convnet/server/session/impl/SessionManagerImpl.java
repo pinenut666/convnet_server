@@ -28,14 +28,14 @@ import java.util.*;
 public final class SessionManagerImpl implements SessionManager, DisposableBean {
    private static final Logger LOG = LoggerFactory.getLogger(SessionManagerImpl.class);
    private Map<Integer, Session> sessions = PlatformDependent.newConcurrentHashMap();
-   private List<SessionListener> listeners = new ArrayList();
+   private List<SessionListener> listeners = new ArrayList<>();
    private ProtocolFactory protocolFactory;
    @Autowired
    private UserManager userManager;
    @Value("#{props.allUserQuitGroup}")
    private boolean allUserQuitGroup;
    @Autowired
-   protected GroupManager groupManager;
+   private GroupManager groupManager;
 
    public void setListeners(List<SessionListener> listeners) {
       this.listeners.addAll(listeners);

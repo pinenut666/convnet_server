@@ -214,23 +214,13 @@ public class UserManagerImpl implements UserManager {
    public User saveUser(User user) {
       if (user.getId() == null) {
          user.setCreateAt(DateUtil.getLocalDateTime(new Date()));
-         //先插入，再获取
-         //TODO:寻找更合适的方案解决userid不自增的麻烦
-         QueryWrapper<User> wrapper = new QueryWrapper();
-         wrapper.orderByDesc("ID");
-         int id = userMapper.selectOne(wrapper).getId();
-         int newid = id + 1;
-         user.setId(newid);
-
          if(user.getAdmin()==null)
          {
             user.setAdmin(false);
          }
-
-         //使用不合理的手段自增完毕，并开始插入
+         //使用自定义ID注解，生成ID
          userMapper.insert(user);
-
-         //需要我们手动初始化userEx并设置外键
+         //需要我们手动初始化userEx
          UserEx userEx = new UserEx();
          userEx.setUserIsOnline(false);
          userEx.setUserId(user.getId());

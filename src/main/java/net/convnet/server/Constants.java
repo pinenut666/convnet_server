@@ -4,11 +4,12 @@ import io.netty.util.AttributeKey;
 import org.apache.commons.lang3.time.FastDateFormat;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.Format;
 
 public final class Constants {
    public static final String DEFAULT_CHARSET = "UTF-8";
-   public static final Charset CHARSET = Charset.forName("UTF-8");
+   public static final Charset CHARSET = StandardCharsets.UTF_8;
    public static final Format DATE_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd");
    public static final Format DATETIME_FORMAT = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
    public static final String USER_ID = "userId";

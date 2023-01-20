@@ -25,7 +25,7 @@ public class ExceptionUtils {
    public static String buildMessage(int code, Object[] args, String defaultMessage, Throwable cause) {
       String message = null;
       if (code != 1) {
-         message = NLS.getMessage("error." + code, args, (String)null);
+         message = NLS.getMessage("error." + code, args, null);
       }
 
       if (StringUtils.isNotEmpty(defaultMessage)) {
@@ -41,7 +41,7 @@ public class ExceptionUtils {
 
    public static String buildMessage(String message, Throwable cause) {
       StringBuilder sb = new StringBuilder(message);
-      Set<Throwable> visitedExceptions = new HashSet();
+      Set<Throwable> visitedExceptions = new HashSet<>();
       Throwable tmpEx = cause;
 
       do {

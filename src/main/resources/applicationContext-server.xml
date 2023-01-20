@@ -15,12 +15,6 @@
         <property name="fileEncoding" value="utf-8"/>
     </bean>
 
-
-    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <property name="basenames" value="classpath:message/errors,classpath:message/messages"/>
-        <property name="defaultEncoding" value="UTF-8"/>
-    </bean>
-
     <bean class="net.convnet.server.support.message.NLS">
         <property name="messageProvider">
             <bean class="net.convnet.server.support.message.SpringMessageProvider">
@@ -39,10 +33,6 @@
     <bean id="userManager" class="net.convnet.server.identity.impl.UserManagerImpl">
         <property name="encryptService" ref="encryptService"/>
     </bean>
-
-    <bean id="groupManager" class="net.convnet.server.identity.impl.GroupManagerImpl"/>
-
-    <bean id="resetCodeManager" class="net.convnet.server.identity.impl.ResetCodeManagerImpl"/>
 
     <bean id="cm" abstract="true" class="net.convnet.server.protocol.bin.CoderMapping"/>
 

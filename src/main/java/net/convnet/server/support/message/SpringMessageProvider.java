@@ -1,10 +1,9 @@
 package net.convnet.server.support.message;
 
 import org.springframework.context.MessageSource;
-import org.springframework.stereotype.Service;
 
 import java.util.Locale;
-@Service
+
 public class SpringMessageProvider implements MessageProvider {
    private MessageSource messageSource;
 
@@ -13,15 +12,15 @@ public class SpringMessageProvider implements MessageProvider {
    }
 
    public String getMessage(String key) {
-      return this.getMessage(key, (Object[])null, (String)null, (Locale)null);
+      return this.getMessage(key, null, null, null);
    }
 
    public String getMessage(String key, Object[] args) {
-      return this.getMessage(key, args, (String)null, (Locale)null);
+      return this.getMessage(key, args, null, null);
    }
 
    public String getMessage(String key, Object[] args, String defaultMessage) {
-      return this.getMessage(key, args, defaultMessage, (Locale)null);
+      return this.getMessage(key, args, defaultMessage, null);
    }
 
    public String getMessage(String key, Object[] args, String defaultMessage, Locale locale) {

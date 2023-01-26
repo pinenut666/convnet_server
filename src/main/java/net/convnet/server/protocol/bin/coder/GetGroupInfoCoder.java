@@ -31,11 +31,8 @@ public class GetGroupInfoCoder extends AbstractPacketCoder {
    }
 
    public void encode(ResponseReader reader, BinaryPacket packet) {
-      List<Group> groups = (List)reader.getAttr("groups");
-      Iterator i$ = groups.iterator();
-
-      while(i$.hasNext()) {
-         Group group = (Group)i$.next();
+      List<Group> groups = reader.getAttr("groups");
+      for (Group group : groups) {
          this.addGroup(packet, group);
       }
 
@@ -47,10 +44,8 @@ public class GetGroupInfoCoder extends AbstractPacketCoder {
       packet.add(group.getName());
       packet.add(group.getId());
       packet.add(group.getCreatorId());
-      Iterator i$ = userManager.getUserByGroupId(group.getId()).iterator();
 
-      while(i$.hasNext()) {
-         User user = (User)i$.next();
+      for (User user : userManager.getUserByGroupId(group.getId())) {
          this.addUser(packet, user);
       }
 

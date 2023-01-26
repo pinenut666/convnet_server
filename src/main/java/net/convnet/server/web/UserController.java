@@ -1,3 +1,4 @@
+/*
 package net.convnet.server.web;
 
 import net.convnet.server.identity.UserManager;
@@ -16,7 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping({"user"})
-public class UserController extends BaseController {
+public class UserController {
    @Autowired
    private UserManager userManager;
    @Autowired
@@ -115,3 +116,4 @@ public class UserController extends BaseController {
       return "user/sendmessage";
    }
 }
+*/

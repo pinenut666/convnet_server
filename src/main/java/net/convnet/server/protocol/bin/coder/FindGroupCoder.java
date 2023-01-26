@@ -32,15 +32,13 @@ public class FindGroupCoder extends AbstractPacketCoder {
    }
 
    public void encode(ResponseReader reader, BinaryPacket packet) {
-      List<Group> groups = (List)reader.getAttr("groups");
+      List<Group> groups = reader.getAttr("groups");
       if (groups == null) {
          packet.add("N");
       } else {
          packet.add(groups.size());
-         Iterator i$ = groups.iterator();
 
-         while(i$.hasNext()) {
-            Group group = (Group)i$.next();
+         for (Group group : groups) {
             packet.add(group.getId());
             packet.add(group.getName());
             packet.add(group.getDescription());

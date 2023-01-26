@@ -26,7 +26,7 @@ public final class BinaryPacket {
 
    public BinaryPacket() {
       this.cmd = null;
-      this.parts = new ArrayList();
+      this.parts = new ArrayList<>();
    }
 
    public Cmd getCmd() {

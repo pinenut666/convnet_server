@@ -27,15 +27,13 @@ public class FindUserCoder extends AbstractPacketCoder {
    }
 
    public void encode(ResponseReader reader, BinaryPacket packet) {
-      List<User> users = (List)reader.getAttr("users");
+      List<User> users = reader.getAttr("users");
       if (users == null) {
          packet.add("N");
       } else {
          packet.add(users.size());
-         Iterator i$ = users.iterator();
 
-         while(i$.hasNext()) {
-            User user = (User)i$.next();
+         for (User user : users) {
             packet.add(user.getId());
             packet.add(user.getName());
             packet.add(user.getNickName());

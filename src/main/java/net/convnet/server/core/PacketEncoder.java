@@ -32,7 +32,7 @@ final class PacketEncoder extends MessageToByteEncoder<ResponseReader> {
          LOG.debug("Send packet: [" + out.toString(Constants.CHARSET) + "]");
       }
 
-      Long writeBytes = (Long)ctx.channel().attr(Constants.WRITE_BYTES_KEY).get();
+      Long writeBytes = ctx.channel().attr(Constants.WRITE_BYTES_KEY).get();
       if (writeBytes == null) {
          writeBytes = 0L;
       }

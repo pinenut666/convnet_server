@@ -16,5 +16,5 @@ public enum P2PCallType {
    ALL_NOTARRIVE,
    NOTCONNECT,
    DISCONNECT,
-   SAMEIP_CALL;
+   SAMEIP_CALL
 }

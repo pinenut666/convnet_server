@@ -1,6 +1,11 @@
 package net.convnet.server.identity.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import net.convnet.server.common.page.ColumnFilter;
+import net.convnet.server.common.page.PageRequest;
+import net.convnet.server.common.page.PageResult;
 import net.convnet.server.ex.EntityNotFoundException;
 import net.convnet.server.identity.*;
 import net.convnet.server.mybatis.mapper.GroupAdminMapper;
@@ -9,6 +14,7 @@ import net.convnet.server.mybatis.mapper.GroupRequestMapper;
 import net.convnet.server.mybatis.mapper.GroupUserMapper;
 import net.convnet.server.mybatis.pojo.*;
 import net.convnet.server.util.DateUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -228,9 +234,17 @@ public class GroupManagerImpl implements GroupManager {
       }
    }
 
-   public List<Group> getAllGroup() {
-      //TODO:查看无属性情况下影响
-      return groupMapper.selectList(null);
-     // return this.list(this.criteria(new Criterion[0]).addOrder(Order.desc("id")));
+   @Override
+   public PageResult findPage(PageRequest pageRequest) {
+      ColumnFilter columnFilter = pageRequest.getColumnFilters().get("name");
+      LambdaQueryWrapper<Group> wrapper = new LambdaQueryWrapper<>();
+      if (columnFilter != null && !StringUtils.isEmpty(columnFilter.getValue())) {
+         wrapper.eq(Group::getName, columnFilter.getValue());
+      }
+      int pageNum = pageRequest.getPageNum();
+      int pageSize = pageRequest.getPageSize();
+      Page<Group> page = new Page<>(pageNum, pageSize);
+      IPage<Group> result = groupMapper.selectPage(page, wrapper);
+      return new PageResult(result);
    }
 }

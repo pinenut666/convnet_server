@@ -2,6 +2,7 @@ package net.convnet.server.protocol.bin;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufProcessor;
+import io.netty.util.ByteProcessor;
 import net.convnet.server.Constants;
 import net.convnet.server.ex.CodecException;
 import net.convnet.server.ex.ConvnetException;
@@ -50,7 +51,7 @@ public final class BinaryProtocol implements Protocol, ApplicationContextAware, 
       byte c = buff.getByte(0);
       String[] dataArr;
       if (c == 48) {
-         int index = buff.forEachByte(new ByteBufProcessor() {
+         int index = buff.forEachByte(new ByteProcessor() {
             public boolean process(byte value) throws Exception {
                return value != 42;
             }
@@ -92,15 +93,13 @@ public final class BinaryProtocol implements Protocol, ApplicationContextAware, 
 
             StringBuilder sb = new StringBuilder(32);
             sb.append(cmd.toOrdinal());
-            Iterator i$ = packet.getParts().iterator();
 
-            while(i$.hasNext()) {
-               Object part = i$.next();
+            for (Object part : packet.getParts()) {
                sb.append(',');
                if (part instanceof Boolean) {
-                  sb.append((char)((Boolean)part ? 'T' : 'F'));
+                  sb.append((Boolean) part ? 'T' : 'F');
                } else if (part != null) {
-                  sb.append(part.toString());
+                  sb.append(part);
                }
             }
 

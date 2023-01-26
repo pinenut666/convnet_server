@@ -26,11 +26,9 @@ public class GetFriendInfoCoder extends AbstractPacketCoder {
    }
 
    public void encode(ResponseReader reader, BinaryPacket packet) {
-      List<User> friends = (List)reader.getAttr("friends");
-      Iterator i$ = friends.iterator();
+      List<User> friends = reader.getAttr("friends");
 
-      while(i$.hasNext()) {
-         User user = (User)i$.next();
+      for (User user : friends) {
          packet.add(user.getId());
          packet.add(user.getNickName());
          packet.add(this.sessionManager.getSession(user.getId()) != null);

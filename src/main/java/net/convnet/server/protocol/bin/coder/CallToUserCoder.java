@@ -25,7 +25,7 @@ public class CallToUserCoder extends AbstractPacketCoder {
    }
 
    public void encode(ResponseReader reader, BinaryPacket packet) {
-      P2PCallType callType = (P2PCallType)reader.getAttr("callType");
+      P2PCallType callType = reader.getAttr("callType");
       packet.add(callType.ordinal());
       switch(callType) {
       case ALL_DATA:

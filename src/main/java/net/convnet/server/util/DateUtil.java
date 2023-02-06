@@ -10,7 +10,6 @@ public class DateUtil {
     {
         Instant instant = date.toInstant();
         ZoneId zoneId = ZoneId.systemDefault();
-
         LocalDateTime localDateTime = instant.atZone(zoneId).toLocalDateTime();
         return localDateTime;
     }

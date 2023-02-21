@@ -69,6 +69,7 @@ public class RegisterProcessor extends AbstractProcessor {
          user = new User();
          user.setName(name);
          user.setNickName(request.getParam("nickName"));
+         //这里就能直接获取密码哎
          if (this.forceUseMailCheck) {
             user.setPassword("waitForMailConfirm");
          } else {

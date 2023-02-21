@@ -66,7 +66,7 @@ public class GroupController {
    @PostMapping("getgroupmember")
    public CommonResult<Object> getUserByGroupId(@RequestParam int id)
    {
-      //很显然，我写错了这几个方法的位置……
+      //很显然，我写错了这个方法的位置……
       return CommonResult.success(userManager.getUserByGroupId(id));
    }
 }

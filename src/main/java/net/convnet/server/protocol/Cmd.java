@@ -82,12 +82,13 @@ public enum Cmd {
    HANDSHAKE,
    NULLPACK;
 
-   public static final Set<Cmd> ANONYMOUS_CMDS = Sets.newHashSet(new Cmd[]{LOGIN, REGIST_USER, HANDSHAKE, KEEP_ONLINE});
+   public static final Set<Cmd> ANONYMOUS_CMDS = Sets.newHashSet(LOGIN, REGIST_USER, HANDSHAKE, KEEP_ONLINE);
 
    public String toOrdinal() {
       return String.valueOf(this.ordinal());
    }
 
+   //这里能获取到对应的数据
    public static void main(String[] args) {
       Cmd[] arr$ = values();
       int len$ = arr$.length;

@@ -1,4 +1,4 @@
-package net.convnet.server.web;
+package net.convnet.server.web.pojo;
 
 import com.alibaba.fastjson.JSON;
 import lombok.AllArgsConstructor;

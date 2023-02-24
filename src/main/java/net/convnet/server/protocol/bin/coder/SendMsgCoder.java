@@ -11,22 +11,24 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SendMsgCoder extends AbstractPacketCoder {
-   @Autowired
-   private SessionManager sessionManager;
 
+   @Override
    public Cmd getCmd() {
       return Cmd.SEND_MSGTO_ID;
    }
 
+   @Override
    public Cmd getRespCmd() {
       return Cmd.SEND_MSGTO_ID_RESP;
    }
 
+   @Override
    public void decode(RequestBuilder builder, BinaryPacket packet) {
       builder.set("userid", packet.get(0));
       builder.set("msg", packet.get(1));
    }
 
+   @Override
    public void encode(ResponseReader reader, BinaryPacket packet) {
       packet.add(reader.getAttr("userid"));
       packet.add("*" + reader.getAttr("msg"));

@@ -49,6 +49,7 @@ public final class ServerInitializer extends ChannelInitializer<SocketChannel> i
    }
 
 
+   @Override
    protected void initChannel(SocketChannel ch) throws Exception {
       ChannelPipeline pipeline = ch.pipeline();
       pipeline.addLast("readTimeOut", new ReadTimeoutHandler(600));
@@ -61,10 +62,12 @@ public final class ServerInitializer extends ChannelInitializer<SocketChannel> i
       pipeline.addLast("logging", new LoggingHandler(LogLevel.DEBUG));
    }
 
+   @Override
    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
       this.appCtx = applicationContext;
    }
 
+   @Override
    public void afterPropertiesSet() throws Exception {
       this.filters.add(new ProcessFilter(this.appCtx.getBeansOfType(Processor.class).values()));
 
@@ -77,6 +80,7 @@ public final class ServerInitializer extends ChannelInitializer<SocketChannel> i
       this.encoderHandle = new PacketEncoder(this.protocolFactory);
    }
 
+   @Override
    public void destroy() throws Exception {
       for (Filter filter : this.filters) {
          filter.destroy();

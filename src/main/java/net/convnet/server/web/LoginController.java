@@ -138,15 +138,20 @@ public class LoginController {
         return CommonResult.success("注册成功");
       }
    }
+
+
    @GetMapping("/reset")
    public String reset(@RequestParam(value = "code",required = false) String code) throws Exception {
       User user = this.resetCodeManager.getUserByResetCode(code);
       if (user != null) {
 
       } else {
-
+         return "";
       }
+      return "";
    }
+
+
 
 
 

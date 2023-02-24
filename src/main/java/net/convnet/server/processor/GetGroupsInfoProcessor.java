@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class GetGroupsInfoProcessor extends AbstractProcessor {
+   @Override
    public Cmd accept() {
       return Cmd.GET_GROUP_INFO;
    }
 
+   @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
       response.setAttr("groups", groupManager.getGroupByUserId(session.getUser().getId()));
    }

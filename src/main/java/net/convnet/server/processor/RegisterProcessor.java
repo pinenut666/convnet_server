@@ -37,10 +37,12 @@ public class RegisterProcessor extends AbstractProcessor {
    @Autowired
    private EmailSender emailSender;
 
+   @Override
    public Cmd accept() {
       return Cmd.REGIST_USER;
    }
 
+   @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
       if (this.allowregist) {
          String name = request.getRequiredParam("name");

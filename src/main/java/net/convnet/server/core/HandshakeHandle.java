@@ -1,7 +1,6 @@
 package net.convnet.server.core;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufProcessor;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -17,6 +16,7 @@ final class HandshakeHandle extends ChannelInboundHandlerAdapter {
    private static AttributeKey<Boolean> HANDSHAKE_KEY = AttributeKey.newInstance("Handshake");
    private static final Logger LOG = LoggerFactory.getLogger(HandshakeHandle.class);
 
+   @Override
    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
       ByteBuf in = (ByteBuf)msg;
       if (in.isReadable()) {
@@ -24,6 +24,7 @@ final class HandshakeHandle extends ChannelInboundHandlerAdapter {
             final StringBuilder sb = new StringBuilder(in.readableBytes());
             sb.append("\n---------------------------------------------------------------------------------------------\n");
             in.forEachByte(new ByteProcessor() {
+               @Override
                public boolean process(byte value) throws Exception {
                   sb.append(Hex.encodeHex(new byte[]{value})).append(" ");
                   return true;

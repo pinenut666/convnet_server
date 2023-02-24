@@ -1,5 +1,6 @@
 package net.convnet.server.protocol.bin.coder;
 
+import cn.hutool.extra.spring.SpringUtil;
 import net.convnet.server.identity.GroupManager;
 import net.convnet.server.identity.UserManager;
 import net.convnet.server.mybatis.pojo.Group;
@@ -17,19 +18,24 @@ import java.util.List;
 
 @Service
 public class GetGroupInfoCoder extends AbstractPacketCoder {
-   @Autowired
-   private SessionManager sessionManager;
+   public SessionManager getSessionManager() {
+      return SpringUtil.getBean("sessionManager",SessionManager.class);
+   }
+
    @Autowired
    private UserManager userManager;
 
+   @Override
    public Cmd getCmd() {
       return Cmd.GET_GROUP_INFO;
    }
 
+   @Override
    public Cmd getRespCmd() {
       return Cmd.GET_GROUP_INFO_RESP;
    }
 
+   @Override
    public void encode(ResponseReader reader, BinaryPacket packet) {
       List<Group> groups = reader.getAttr("groups");
       for (Group group : groups) {
@@ -55,6 +61,6 @@ public class GetGroupInfoCoder extends AbstractPacketCoder {
       packet.add("U");
       packet.add(user.getNickName());
       packet.add(user.getId());
-      packet.add(this.sessionManager.getSession(user.getId()) != null);
+      packet.add(this.getSessionManager().getSession(user.getId()) != null);
    }
 }

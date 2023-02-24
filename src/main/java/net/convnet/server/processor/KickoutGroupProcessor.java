@@ -15,10 +15,12 @@ import java.util.Objects;
 
 @Service
 public class KickoutGroupProcessor extends AbstractProcessor {
+   @Override
    public Cmd accept() {
       return Cmd.KICK_OUT;
    }
 
+   @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
       User optuser = this.userManager.getUser(request.getIntParam("userid"));
       Group group = this.groupManager.getGroup(request.getIntParam("groupid"));

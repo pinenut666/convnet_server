@@ -8,14 +8,17 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserUpdateInfoCoder extends AbstractPacketCoder {
+   @Override
    public Cmd getCmd() {
       return Cmd.RENEW_MY_INFO;
    }
 
+   @Override
    public Cmd getRespCmd() {
       return Cmd.RENEW_MY_INFO_RESP;
    }
 
+   @Override
    public void decode(RequestBuilder builder, BinaryPacket packet) {
       if (packet.getParts().size() < 5) {
          builder.set("nickName", packet.get(0));

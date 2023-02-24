@@ -37,14 +37,17 @@ public final class CoderMapping implements PacketCoder {
       this.decode = decode;
    }
 
+   @Override
    public Cmd getCmd() {
       return this.cmd;
    }
 
+   @Override
    public Cmd getRespCmd() {
       return this.rCmd == null ? this.cmd : this.rCmd;
    }
 
+   @Override
    public void decode(RequestBuilder builder, BinaryPacket packet) {
       int i = 0;
 
@@ -54,6 +57,7 @@ public final class CoderMapping implements PacketCoder {
 
    }
 
+   @Override
    public void encode(ResponseReader reader, BinaryPacket packet) {
       if (this.encode.length == 0 && this.star == null) {
          reader.setOutput(false);

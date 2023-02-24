@@ -51,10 +51,12 @@ public class ConvnetException extends RuntimeException implements ErrorCode {
       return this.args;
    }
 
+   @Override
    public String getMessage() {
       return ExceptionUtils.buildMessage(this.code, this.args, super.getMessage(), this.getCause());
    }
 
+   @Override
    public String toString() {
       return this.getMessage();
    }

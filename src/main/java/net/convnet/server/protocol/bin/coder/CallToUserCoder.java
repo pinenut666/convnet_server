@@ -10,20 +10,24 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CallToUserCoder extends AbstractPacketCoder {
+   @Override
    public Cmd getCmd() {
       return Cmd.CALL_TO_USER;
    }
 
+   @Override
    public Cmd getRespCmd() {
       return Cmd.CALL_TO_USER_RESP;
    }
 
+   @Override
    public void decode(RequestBuilder builder, BinaryPacket packet) {
       builder.set("id", packet.get(0));
       builder.set("count", packet.get(1));
       builder.set("password", packet.get(2));
    }
 
+   @Override
    public void encode(ResponseReader reader, BinaryPacket packet) {
       P2PCallType callType = reader.getAttr("callType");
       packet.add(callType.ordinal());

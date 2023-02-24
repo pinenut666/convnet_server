@@ -11,10 +11,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class LogoutProcessor extends AbstractProcessor {
+   @Override
    public Cmd accept() {
       return Cmd.LOGOUT;
    }
 
+   @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
       User user = this.userManager.getUser(session.getUserId());
       if (!session.isLogin()) {

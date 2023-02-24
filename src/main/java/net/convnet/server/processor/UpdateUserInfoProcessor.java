@@ -12,10 +12,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UpdateUserInfoProcessor extends AbstractProcessor {
+   @Override
    public Cmd accept() {
       return Cmd.RENEW_MY_INFO;
    }
 
+   @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
       User user = session.getUser();
       user.setNickName(request.getParam("nickName"));
@@ -26,7 +28,7 @@ public class UpdateUserInfoProcessor extends AbstractProcessor {
       user.setDescription(request.getParam("description"));
       this.userManager.saveUser(user);
       String tmpstr = StringUtils.trim(request.getParam("password"));
-      if (!tmpstr.equals("　") && !tmpstr.equals("") && !tmpstr.equals("NOTMODIFYED")) {
+      if (!"　".equals(tmpstr) && !"".equals(tmpstr) && !"NOTMODIFYED".equals(tmpstr)) {
          this.userManager.updatePassword(user.getId(), request.getParam("password"));
       }
 

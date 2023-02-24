@@ -41,6 +41,7 @@ public class GroupManagerImpl implements GroupManager {
 
 
    //根据主键ID获取Group
+   @Override
    public Group getGroup(int id) {
       return groupMapper.selectById(id);
    }
@@ -90,6 +91,7 @@ public class GroupManagerImpl implements GroupManager {
    }
 
    //根据名称获取ID
+   @Override
    public Group getGroupByName(String groupName) {
       LambdaQueryWrapper<Group> wrapper = new LambdaQueryWrapper<>();
       wrapper.eq(Group::getName, groupName);
@@ -97,6 +99,7 @@ public class GroupManagerImpl implements GroupManager {
       return groupMapper.selectOne(wrapper);
    }
    //根据查询信息查询组，看上去像是给前端查询对应分组用的。
+   @Override
    public List<Group> findGroup(FindType type, String value, int size) {
       String fieldName = null;
       switch(type) {
@@ -105,6 +108,9 @@ public class GroupManagerImpl implements GroupManager {
          break;
       case DESCRIPTION:
          fieldName = "description";
+         break;
+      default:
+         fieldName = "name";
       }
       LambdaQueryWrapper<Group> wrapper = new LambdaQueryWrapper<>();
       if("name".equals(fieldName))
@@ -122,6 +128,7 @@ public class GroupManagerImpl implements GroupManager {
       //return this.list(this.criteria(new Criterion[]{Restrictions.like(fieldName, value, MatchMode.ANYWHERE)}).addOrder(Order.asc("name")).setMaxResults(size));
    }
 
+   @Override
    @Transactional
    public Group saveGroup(Group group) {
       if (group.getId() == null) {
@@ -142,6 +149,7 @@ public class GroupManagerImpl implements GroupManager {
       return groupMapper.selectById(group.getId());
    }
 
+   @Override
    @Transactional
    public void removeGroup(int id) {
       //由于JPA的缘故，jpa帮我们处理好了删除的问题
@@ -156,6 +164,7 @@ public class GroupManagerImpl implements GroupManager {
       groupMapper.deleteById(id);
    }
 
+   @Override
    @Transactional
    public void sendGroupRequest(int userId, int targetGroupId, String description) {
       LambdaQueryWrapper<GroupRequest> wrapper = new LambdaQueryWrapper<>();
@@ -174,12 +183,14 @@ public class GroupManagerImpl implements GroupManager {
       groupRequestMapper.insert(request);
    }
 
+   @Override
    public GroupRequest getGroupRequest(int userId, int groupid) {
       LambdaQueryWrapper<GroupRequest> wrapper = new LambdaQueryWrapper<>();
       wrapper.eq(GroupRequest::getUserId,userId).eq(GroupRequest::getTargetId,groupid);
       return groupRequestMapper.selectOne(wrapper);
    }
 
+   @Override
    @Transactional
    public GroupRequest dealGroupRequest(int userid, int groupid, boolean reject) {
       GroupRequest request = this.getGroupRequest(userid, groupid);
@@ -191,6 +202,7 @@ public class GroupManagerImpl implements GroupManager {
       }
    }
 
+   @Override
    @Transactional
    //根据组查询用户是否可以加入
    //查询表cvn_group_user（原标记）
@@ -217,6 +229,7 @@ public class GroupManagerImpl implements GroupManager {
       this.userManager.saveUser(user);
    }
 
+   @Override
    @Transactional
    public void quitGroup(User user, Group group) {
       LambdaQueryWrapper<GroupUser> wrapper = new LambdaQueryWrapper<>();

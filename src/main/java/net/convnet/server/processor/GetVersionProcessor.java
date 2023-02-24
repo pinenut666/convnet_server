@@ -14,10 +14,12 @@ public class GetVersionProcessor extends AbstractProcessor {
    @Value("#{props.updateURL}")
    private String updateURL;
 
+   @Override
    public Cmd accept() {
       return Cmd.GET_VERSION_RESP;
    }
 
+   @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
       response.setAttr("version", this.sessionManager.getProtocol(session).getVersionCode());
       response.setAttr("updateURL", this.updateURL);

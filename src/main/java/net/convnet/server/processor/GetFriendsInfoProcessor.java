@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class GetFriendsInfoProcessor extends AbstractProcessor {
+   @Override
    public Cmd accept() {
       return Cmd.GET_FRIEND_INFO;
    }
 
+   @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
       //TODO:看来以后要从这里面究极折磨了
       response.setAttr("friends", userManager.getUserFriends(session.getUser().getId()));

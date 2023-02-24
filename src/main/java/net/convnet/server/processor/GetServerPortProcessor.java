@@ -14,10 +14,12 @@ public class GetServerPortProcessor extends AbstractProcessor {
    @Value("#{props.udpPorts}")
    private String updPorts;
 
+   @Override
    public Cmd accept() {
       return Cmd.GET_SERVER_PORT;
    }
 
+   @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
       response.setAttr("updPorts", this.updPorts);
    }

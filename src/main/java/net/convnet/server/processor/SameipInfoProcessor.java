@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SameipInfoProcessor extends AbstractProcessor {
+   @Override
    public Cmd accept() {
       return Cmd.SAMEIP_INFO;
    }
 
+   @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
       response.setOutput(false);
       Session targeetsession = this.getSession(request.getIntParam("targetid"));

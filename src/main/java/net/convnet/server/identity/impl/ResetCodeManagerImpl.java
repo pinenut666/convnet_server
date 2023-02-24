@@ -25,6 +25,7 @@ public class ResetCodeManagerImpl implements ResetCodeManager {
 
 
 
+   @Override
    @Transactional
    public ResetCode findByUserID(int userid) {
       LambdaQueryWrapper<ResetCode> wrapper = new LambdaQueryWrapper<>();
@@ -32,6 +33,7 @@ public class ResetCodeManagerImpl implements ResetCodeManager {
       return resetCodeMapper.selectOne(wrapper);
    }
 
+   @Override
    @Transactional
    public ResetCode createResetCode(User user) {
       ResetCode resetCode = this.findByUserID(user.getId());
@@ -54,6 +56,7 @@ public class ResetCodeManagerImpl implements ResetCodeManager {
       return resetCode;
    }
 
+   @Override
    @Transactional(
       readOnly = true
    )
@@ -62,6 +65,7 @@ public class ResetCodeManagerImpl implements ResetCodeManager {
       return userMapper.selectById(resetCode.getUserId());
    }
 
+   @Override
    @Transactional
    public void removeResetCode(String code) {
       resetCodeMapper.deleteById(code);

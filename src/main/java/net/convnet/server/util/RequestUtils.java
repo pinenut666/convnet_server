@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public class RequestUtils {
    public static UrlPathHelper URL_PATH_HELPER = new UrlPathHelper() {
+      @Override
       public String getLookupPathForRequest(HttpServletRequest request) {
          String key = request.getRequestURI() + "_lookupPath";
          String path = (String)request.getAttribute(key);

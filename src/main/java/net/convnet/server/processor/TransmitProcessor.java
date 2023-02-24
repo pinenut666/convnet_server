@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class TransmitProcessor extends AbstractProcessor {
+   @Override
    public Cmd accept() {
       return Cmd.SERVER_TRANS;
    }
 
+   @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
       response.setOutput(false);
       Session session1 = this.sessionManager.getSession(request.getIntParam("userId"));

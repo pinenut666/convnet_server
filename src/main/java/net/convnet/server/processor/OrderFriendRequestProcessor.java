@@ -12,10 +12,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class OrderFriendRequestProcessor extends AbstractProcessor {
+   @Override
    public Cmd accept() {
       return Cmd.PEER_ORD_FRIEND;
    }
 
+   @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
       int targetUserId = request.getIntParam("id");
       String description = request.getParam("description");

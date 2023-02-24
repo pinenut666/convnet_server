@@ -11,18 +11,22 @@ public class SpringMessageProvider implements MessageProvider {
       this.messageSource = messageSource;
    }
 
+   @Override
    public String getMessage(String key) {
       return this.getMessage(key, null, null, null);
    }
 
+   @Override
    public String getMessage(String key, Object[] args) {
       return this.getMessage(key, args, null, null);
    }
 
+   @Override
    public String getMessage(String key, Object[] args, String defaultMessage) {
       return this.getMessage(key, args, defaultMessage, null);
    }
 
+   @Override
    public String getMessage(String key, Object[] args, String defaultMessage, Locale locale) {
       return this.messageSource.getMessage(key, args, defaultMessage, locale);
    }

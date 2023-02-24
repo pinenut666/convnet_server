@@ -10,17 +10,18 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SendMsgNotArriveCoder extends AbstractPacketCoder {
-   @Autowired
-   private SessionManager sessionManager;
 
+   @Override
    public Cmd getCmd() {
       return Cmd.NULLPACK;
    }
 
+   @Override
    public Cmd getRespCmd() {
       return Cmd.MSG_CAN_TARRIVE;
    }
 
+   @Override
    public void encode(ResponseReader reader, BinaryPacket packet) {
       packet.add(reader.getAttr("userid"));
       packet.add("*" + reader.getAttr("msg"));

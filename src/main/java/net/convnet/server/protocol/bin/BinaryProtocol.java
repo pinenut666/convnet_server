@@ -1,7 +1,6 @@
 package net.convnet.server.protocol.bin;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufProcessor;
 import io.netty.util.ByteProcessor;
 import net.convnet.server.Constants;
 import net.convnet.server.ex.CodecException;
@@ -32,14 +31,17 @@ public final class BinaryProtocol implements Protocol, ApplicationContextAware, 
       this.coderMappings = coderMappings;
    }
 
+   @Override
    public int getVersion() {
       return 1;
    }
 
+   @Override
    public String getVersionCode() {
       return "4.2";
    }
 
+   @Override
    public Request decode(ByteBuf buff) {
       BinaryPacket packet = this.parseBinaryPacket(buff);
       DefaultRequest request = new DefaultRequest(packet.getCmd(), this.getVersion());
@@ -52,6 +54,7 @@ public final class BinaryProtocol implements Protocol, ApplicationContextAware, 
       String[] dataArr;
       if (c == 48) {
          int index = buff.forEachByte(new ByteProcessor() {
+            @Override
             public boolean process(byte value) throws Exception {
                return value != 42;
             }
@@ -80,6 +83,7 @@ public final class BinaryProtocol implements Protocol, ApplicationContextAware, 
       }
    }
 
+   @Override
    public void encode(ResponseReader reader, ByteBuf buff) {
       if (reader.needOutput()) {
          Cmd cmd = reader.getCmd();
@@ -108,10 +112,12 @@ public final class BinaryProtocol implements Protocol, ApplicationContextAware, 
       }
    }
 
+   @Override
    public Response createResponse(Cmd cmd) {
       return new DefaultResponse(this.getVersion(), this.getCoder(cmd).getRespCmd());
    }
 
+   @Override
    public Response exToResponse(Throwable e) {
       Response response = this.createResponse(Cmd.ERROR);
       if (e instanceof InvocationTargetException) {
@@ -154,10 +160,12 @@ public final class BinaryProtocol implements Protocol, ApplicationContextAware, 
       }
    }
 
+   @Override
    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
       this.appCtx = applicationContext;
    }
 
+   @Override
    public void afterPropertiesSet() throws Exception {
       //加载实现类的
       Collection<PacketCoder> pack = appCtx.getBeansOfType(PacketCoder.class).values();

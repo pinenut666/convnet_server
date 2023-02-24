@@ -15,7 +15,6 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.Lifecycle;
 
-import java.net.InetSocketAddress;
 import java.util.Arrays;
 
 public class UdpPortDetectServer implements Lifecycle, InitializingBean, DisposableBean {
@@ -28,6 +27,7 @@ public class UdpPortDetectServer implements Lifecycle, InitializingBean, Disposa
       this.ports = ports;
    }
 
+   @Override
    public void start() {
       if (this.running) {
          LOG.info("Already running");
@@ -37,14 +37,13 @@ public class UdpPortDetectServer implements Lifecycle, InitializingBean, Disposa
          try {
             Bootstrap bootstrap = new Bootstrap();
             bootstrap.group(this.group).channel(NioDatagramChannel.class);
-            int[] arr$ = this.ports;
-            int len$ = arr$.length;
+            int[] portslist = this.ports;
 
-            for(int i$ = 0; i$ < len$; ++i$) {
-               int port = arr$[i$];
+            for (int port : portslist) {
                bootstrap.handler(new SimpleChannelInboundHandler<DatagramPacket>() {
-                  protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket packet) throws Exception {
-                     ctx.writeAndFlush(new DatagramPacket(Unpooled.copiedBuffer(String.valueOf(((InetSocketAddress)packet.sender()).getPort()), CharsetUtil.UTF_8), (InetSocketAddress)packet.sender()));
+                  @Override
+                  protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket packet) {
+                     ctx.writeAndFlush(new DatagramPacket(Unpooled.copiedBuffer(String.valueOf(packet.sender().getPort()), CharsetUtil.UTF_8), packet.sender()));
                   }
                });
                bootstrap.bind(port).sync();
@@ -52,13 +51,14 @@ public class UdpPortDetectServer implements Lifecycle, InitializingBean, Disposa
 
             LOG.info("------ Convnet server listening on [{}:{}] ready to serve ------", Arrays.toString(this.ports));
             this.running = true;
-         } catch (Throwable var6) {
-            LOG.error("Server startup error", var6);
+         } catch (Throwable e) {
+            LOG.error("Server startup error", e);
          }
 
       }
    }
 
+   @Override
    public void stop() {
       if (this.running) {
          this.group.shutdownGracefully();
@@ -67,14 +67,17 @@ public class UdpPortDetectServer implements Lifecycle, InitializingBean, Disposa
 
    }
 
+   @Override
    public boolean isRunning() {
       return this.running;
    }
 
+   @Override
    public void destroy() throws Exception {
       this.stop();
    }
 
+   @Override
    public void afterPropertiesSet() throws Exception {
       this.group = new NioEventLoopGroup();
       this.start();

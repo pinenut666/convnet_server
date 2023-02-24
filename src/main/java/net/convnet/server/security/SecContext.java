@@ -5,6 +5,7 @@ import java.util.Map;
 
 public final class SecContext {
    private static ThreadLocal<SecContext> LOCAL = new InheritableThreadLocal<SecContext>() {
+      @Override
       protected SecContext initialValue() {
          return new SecContext();
       }

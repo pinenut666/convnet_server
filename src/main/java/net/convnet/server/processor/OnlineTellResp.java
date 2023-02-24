@@ -14,10 +14,12 @@ import java.util.Iterator;
 
 @Service
 public class OnlineTellResp extends AbstractProcessor {
+   @Override
    public Cmd accept() {
       return Cmd.ONLINE_TELL;
    }
 
+   @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
       this.TellUserOnline(session.getUser());
    }

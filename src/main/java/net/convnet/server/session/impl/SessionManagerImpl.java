@@ -30,7 +30,6 @@ public final class SessionManagerImpl implements SessionManager, DisposableBean 
    private Map<Integer, Session> sessions = PlatformDependent.newConcurrentHashMap();
    private List<SessionListener> listeners = new ArrayList<>();
    private ProtocolFactory protocolFactory;
-   @Autowired
    private UserManager userManager;
    @Value("#{props.allUserQuitGroup}")
    private boolean allUserQuitGroup;
@@ -49,20 +48,24 @@ public final class SessionManagerImpl implements SessionManager, DisposableBean 
       this.userManager = userManager;
    }
 
+   @Override
    public Session createAnonymousSession(Channel channel) {
       return new DefaultSession(0, channel) {
          private static final long serialVersionUID = 1326446241742267020L;
 
+         @Override
          public boolean isLogin() {
             return false;
          }
 
+         @Override
          public User getUser() {
             return null;
          }
       };
    }
 
+   @Override
    public Session createSession(int userId, Channel channel) {
       Session oldSession = (Session)this.sessions.get(userId);
       if (oldSession != null) {
@@ -75,14 +78,17 @@ public final class SessionManagerImpl implements SessionManager, DisposableBean 
       DefaultSession session = new DefaultSession(userId, channel) {
          private static final long serialVersionUID = 1326446241742267020L;
 
+         @Override
          public boolean isLogin() {
             return true;
          }
 
+         @Override
          public User getUser() {
             return userManager.getUser(this.getUserId());
          }
 
+         @Override
          public void destory() {
             User user = this.getUser();
             if (!this.isClosed()) {
@@ -172,6 +178,7 @@ public final class SessionManagerImpl implements SessionManager, DisposableBean 
                }
 
                this.getChannel().close().addListener(new ChannelFutureListener() {
+                  @Override
                   public void operationComplete(ChannelFuture future) {
                      SessionManagerImpl.LOG.debug("Channel [sessionId:" + id + ",userId:" + userId + "] closed");
                   }
@@ -201,31 +208,38 @@ public final class SessionManagerImpl implements SessionManager, DisposableBean 
       return session;
    }
 
+   @Override
    public boolean isOnline(int userId) {
       return this.sessions.containsKey(userId);
    }
 
+   @Override
    public Session getSession(int userId) {
       return (Session)this.sessions.get(userId);
    }
 
+   @Override
    public Session getSession(Channel channel) {
       return (Session)channel.attr(DefaultSession.ATTR_KEY).get();
    }
 
+   @Override
    public Protocol getProtocol(Session session) {
       int version = session.getProtocolVersion();
       return version > 0 ? this.protocolFactory.getProtocol(version) : this.protocolFactory.getDefaultProtocol();
    }
 
+   @Override
    public Protocol getProtocol(Channel channel) {
       return this.getProtocol(this.getSession(channel));
    }
 
+   @Override
    public Collection<Session> getSessions() {
       return this.sessions.values();
    }
 
+   @Override
    public boolean sendMessageToUser(User user, String message) {
       Session session = this.getSession(user.getId());
       if (session == null) {
@@ -243,6 +257,7 @@ public final class SessionManagerImpl implements SessionManager, DisposableBean 
       }
    }
 
+   @Override
    public void destroy() throws Exception {
       Iterator i$ = this.sessions.values().iterator();
 

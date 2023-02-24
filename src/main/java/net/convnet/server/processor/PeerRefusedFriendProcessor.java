@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PeerRefusedFriendProcessor extends AbstractProcessor {
+   @Override
    public Cmd accept() {
       return Cmd.PEER_REFUSED_FRIEND;
    }
 
+   @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
       int targetUserId = request.getIntParam("id");
       this.userManager.dealFriendRequest(targetUserId, session.getUserId(), true);

@@ -19,6 +19,7 @@ final class PacketEncoder extends MessageToByteEncoder<ResponseReader> {
       this.protocolFactory = protocolFactory;
    }
 
+   @Override
    protected void encode(ChannelHandlerContext ctx, ResponseReader reader, ByteBuf out) throws Exception {
       int start = out.writerIndex();
       out.writeInt(0);

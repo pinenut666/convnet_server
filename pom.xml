@@ -46,6 +46,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>xin.altitude.cms</groupId>-->
+<!--            <artifactId>ucode-cms-common</artifactId>-->
+<!--            <version>1.6.2.5</version>-->
+<!--        </dependency>-->
         <!-- Sa-Token 权限认证，在线文档：https://sa-token.cc -->
         <dependency>
             <groupId>cn.dev33</groupId>

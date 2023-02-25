@@ -134,6 +134,7 @@ public class Email {
       this.fromLabel = fromLabel;
    }
 
+   @Override
    public String toString() {
       return ToStringBuilder.reflectionToString(this);
    }

@@ -17,6 +17,7 @@ final class PacketDecoder extends LengthFieldBasedFrameDecoder {
       this.sessionManager = sessionManager;
    }
 
+   @Override
    protected Object decode(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
       ByteBuf frame;
       try {

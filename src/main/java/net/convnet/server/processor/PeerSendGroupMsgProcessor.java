@@ -14,10 +14,12 @@ import java.util.Iterator;
 
 @Service
 public class PeerSendGroupMsgProcessor extends AbstractProcessor {
+   @Override
    public Cmd accept() {
       return Cmd.SEND_GROUP_MSG;
    }
 
+   @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
       int targetgroupid = request.getIntParam("groupid");
       Group targetgroup = this.groupManager.getGroup(targetgroupid);

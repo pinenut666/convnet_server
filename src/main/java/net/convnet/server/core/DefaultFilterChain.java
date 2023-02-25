@@ -16,6 +16,7 @@ final class DefaultFilterChain implements FilterChain {
       this.filters = filters;
    }
 
+   @Override
    public void doFilter(Session session, Request request, Response response) {
       (new Chain(this.filters.iterator())).doFilter(session, request, response);
    }
@@ -27,9 +28,10 @@ final class DefaultFilterChain implements FilterChain {
          this.filtersIterator = filtersIterator;
       }
 
+      @Override
       public void doFilter(Session session, Request request, Response response) {
          if (this.filtersIterator.hasNext()) {
-            Filter filter = (Filter)this.filtersIterator.next();
+            Filter filter = this.filtersIterator.next();
             if (filter.accept(session, request)) {
                filter.doFilter(session, request, response, this);
             } else {

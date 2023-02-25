@@ -30,10 +30,12 @@ public class CallToUserProcessor extends AbstractProcessor implements Applicatio
       this.callProcessors = callProcessors;
    }
 
+   @Override
    public Cmd accept() {
       return Cmd.CALL_TO_USER;
    }
 
+   @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
       int count = request.getIntParam("count");
       int targetUserId = request.getIntParam("id");
@@ -59,19 +61,19 @@ public class CallToUserProcessor extends AbstractProcessor implements Applicatio
                response1.setAttr("id", caller.getId());
                this.write(targetsession, response1);
             } else {
-               if (targetsession.getAttr("udpport") == null || targetsession.getAttr("udpport").equals("")) {
+               if (targetsession.getAttr("udpport") == null || "".equals(targetsession.getAttr("udpport"))) {
                   targetsession.setAttr("udpport", "0");
                }
 
-               if (targetsession.getAttr("tcpport") == null || targetsession.getAttr("tcpport").equals("")) {
+               if (targetsession.getAttr("tcpport") == null || "".equals(targetsession.getAttr("tcpport"))) {
                   targetsession.setAttr("tcpport", "0");
                }
 
-               if (session.getAttr("udpport") == null || session.getAttr("udpport").equals("")) {
+               if (session.getAttr("udpport") == null || "".equals(session.getAttr("udpport"))) {
                   session.setAttr("udpport", "0");
                }
 
-               if (session.getAttr("tcpport") == null || session.getAttr("tcpport").equals("")) {
+               if (session.getAttr("tcpport") == null || "".equals(session.getAttr("tcpport"))) {
                   session.setAttr("tcpport", "0");
                }
 
@@ -84,7 +86,7 @@ public class CallToUserProcessor extends AbstractProcessor implements Applicatio
                }
 
                Response response2;
-               if (count < 3 && !session.getAttr("nattype").equals("UK") && Integer.parseInt(targetsession.getAttr("udpport")) > 0 && Integer.parseInt(session.getAttr("udpport")) > 0) {
+               if (count < 3 && !"UK".equals(session.getAttr("nattype")) && Integer.parseInt(targetsession.getAttr("udpport")) > 0 && Integer.parseInt(session.getAttr("udpport")) > 0) {
                   response1 = this.createResponse(targetsession, Cmd.CALL_TO_USER_RESP);
                   response1.setAttr("callType", P2PCallType.UDP_S2S);
                   response1.setAttr("callerid", caller.getId());
@@ -101,7 +103,7 @@ public class CallToUserProcessor extends AbstractProcessor implements Applicatio
                   this.write(session, response2);
                } else {
                   if (count < 3) {
-                     if (!targetsession.getAttr("nattype").equals("UK") && Integer.parseInt(session.getAttr("udpport")) > 0) {
+                     if (!"UK".equals(targetsession.getAttr("nattype")) && Integer.parseInt(session.getAttr("udpport")) > 0) {
                         response1 = this.createResponse(targetsession, Cmd.CALL_TO_USER_RESP);
                         response1.setAttr("callType", P2PCallType.UDP_C2S);
                         response1.setAttr("callerid", caller.getId());
@@ -112,7 +114,7 @@ public class CallToUserProcessor extends AbstractProcessor implements Applicatio
                         return;
                      }
 
-                     if (!session.getAttr("nattype").equals("UK") && Integer.parseInt(targetsession.getAttr("udpport")) > 0) {
+                     if (!"UK".equals(session.getAttr("nattype")) && Integer.parseInt(targetsession.getAttr("udpport")) > 0) {
                         response1 = this.createResponse(targetsession, Cmd.CALL_TO_USER_RESP);
                         response1.setAttr("callType", P2PCallType.UDP_C2S);
                         response1.setAttr("callerid", targetUserId);
@@ -124,7 +126,7 @@ public class CallToUserProcessor extends AbstractProcessor implements Applicatio
                      }
                   }
 
-                  if (count < 3 && !session.getAttr("nattype").equals("UK") && !targetsession.getAttr("nattype").equals("UK")) {
+                  if (count < 3 && !"UK".equals(session.getAttr("nattype")) && !"UK".equals(targetsession.getAttr("nattype"))) {
                      response1 = this.createResponse(targetsession, Cmd.CALL_TO_USER_RESP);
                      response1.setAttr("callType", P2PCallType.UDP_GETPORT);
                      response1.setAttr("callerid", targetUserId);
@@ -183,10 +185,12 @@ public class CallToUserProcessor extends AbstractProcessor implements Applicatio
       }
    }
 
+   @Override
    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
       this.appCtx = applicationContext;
    }
 
+   @Override
    public void afterPropertiesSet() throws Exception {
       Iterator i$ = this.appCtx.getBeansOfType(CallProcessor.class).values().iterator();
 

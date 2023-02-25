@@ -20,10 +20,12 @@ final class ConvnetHandler extends ChannelInboundHandlerAdapter {
       this.filterChain = filterChain;
    }
 
+   @Override
    public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
       this.sessionManager.createAnonymousSession(ctx.channel());
    }
 
+   @Override
    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
       Session session = this.sessionManager.getSession(ctx.channel());
       if (session != null) {
@@ -32,6 +34,7 @@ final class ConvnetHandler extends ChannelInboundHandlerAdapter {
 
    }
 
+   @Override
    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
       Request request = (Request)msg;
       Cmd cmd = request.getCmd();
@@ -61,10 +64,12 @@ final class ConvnetHandler extends ChannelInboundHandlerAdapter {
       }
    }
 
+   @Override
    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
       ctx.flush();
    }
 
+   @Override
    public void exceptionCaught(ChannelHandlerContext ctx, Throwable e) throws Exception {
       if (LOG.isInfoEnabled()) {
          LOG.error("Serve error", e);

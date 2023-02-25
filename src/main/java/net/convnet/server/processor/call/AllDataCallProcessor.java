@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AllDataCallProcessor implements CallProcessor {
+   @Override
    public P2PCallType accept() {
       return P2PCallType.ALL_DATA;
    }
 
+   @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
    }
 }

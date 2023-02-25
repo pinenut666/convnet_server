@@ -8,6 +8,7 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 public class RSAEncryptServiceImpl extends AbstractEncryptService {
+   @Override
    protected Cipher initEncryptCipher(byte[] key) throws GeneralSecurityException {
       SecureRandom sr = new SecureRandom();
       Cipher cipher = Cipher.getInstance(this.getMethod());
@@ -15,6 +16,7 @@ public class RSAEncryptServiceImpl extends AbstractEncryptService {
       return cipher;
    }
 
+   @Override
    protected Cipher initDecryptCipher(byte[] key) throws GeneralSecurityException {
       SecureRandom sr = new SecureRandom();
       Cipher cipher = Cipher.getInstance(this.getMethod());
@@ -22,6 +24,7 @@ public class RSAEncryptServiceImpl extends AbstractEncryptService {
       return cipher;
    }
 
+   @Override
    public String getMethod() {
       return "RSA";
    }

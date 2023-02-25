@@ -51,6 +51,7 @@ public class UserManagerImpl implements UserManager {
    }
 
    //获取user
+   @Override
    public User getUser(int id) {
 
       return userMapper.selectById(id);
@@ -95,12 +96,14 @@ public class UserManagerImpl implements UserManager {
       return userList;
    }
 
+   @Override
    public User getUserByName(String userName) {
       LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
       wrapper.eq(User::getName, userName);
       return userMapper.selectOne(wrapper);
    }
 
+   @Override
    public List<User> findUser(FindType type, String value, int size) {
       String fieldName = null;
       LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
@@ -164,6 +167,7 @@ public class UserManagerImpl implements UserManager {
    }*/
 
    //鉴权
+   @Override
    public User validateUser(String userName, String password) throws ConvnetException {
       password = formatPassword(password);
       User user = this.getUserByName(userName);
@@ -180,6 +184,7 @@ public class UserManagerImpl implements UserManager {
       }
    }
 
+   @Override
    @Transactional
    public void updatePassword(int id, String password) {
       User user = this.getUser(id);
@@ -196,6 +201,7 @@ public class UserManagerImpl implements UserManager {
       }
    }
 
+   @Override
    public void setPassword(User user, String password) {
       password = formatPassword(password);
       user.setPasswordHash(Codecs.hashHex(password + this.salt));
@@ -208,6 +214,7 @@ public class UserManagerImpl implements UserManager {
 
    }
 
+   @Override
    @Transactional
    //该方法调用时，不能确保用户主键一定存在
    //需要我们手动插入后，再获取主键
@@ -242,6 +249,7 @@ public class UserManagerImpl implements UserManager {
       return userMapper.selectById(user.getId());
    }
 
+   @Override
    @Transactional
    public UserEx saveUserEx(UserEx userEx) {
       //使用替代品查询
@@ -263,17 +271,20 @@ public class UserManagerImpl implements UserManager {
       return userExMapper.selectById(verify);
    }
 
+   @Override
    public int getTodayRegistUserCountFromIp(String IP) {
       LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
       wrapper.gt(User::getCreateAt,DateUtil.getLocalDateTime(new Date())).eq(User::getRegisterIp,IP);
       return userMapper.selectCount(wrapper);
    }
 
+   @Override
    @Transactional
    public void removeUser(int id) {
       userMapper.deleteById(id);
    }
 
+   @Override
    @Transactional
    public void sendFriendRequest(int userId, int targetUserId, String description) {
       FriendRequest request = this.getFriendRequest(userId, targetUserId);
@@ -288,6 +299,7 @@ public class UserManagerImpl implements UserManager {
       friendRequestMapper.insert(request);
    }
 
+   @Override
    @Transactional
    public void dealFriendRequest(int userId, int targetUserId, boolean reject) {
       FriendRequest request = this.getFriendRequest(userId, targetUserId);

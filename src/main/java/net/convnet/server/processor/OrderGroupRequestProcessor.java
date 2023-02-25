@@ -14,10 +14,12 @@ import java.util.Iterator;
 
 @Service
 public class OrderGroupRequestProcessor extends AbstractProcessor {
+   @Override
    public Cmd accept() {
       return Cmd.JOIN_GROUP;
    }
 
+   @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
       int targetGroup = request.getIntParam("groupid");
       String description = request.getParam("description");
@@ -26,7 +28,7 @@ public class OrderGroupRequestProcessor extends AbstractProcessor {
       User user = session.getUser();
       User admin = userManager.getUser(group.getCreatorId());
       String grouppass = group.getPassword();
-      if (grouppass.equals(description) && !description.equals("")) {
+      if (grouppass.equals(description) && !"".equals(description)) {
          this.groupManager.joinGroup(user, group);
          Iterator i$ = userManager.getUserByGroupId(group.getId()).iterator();
 

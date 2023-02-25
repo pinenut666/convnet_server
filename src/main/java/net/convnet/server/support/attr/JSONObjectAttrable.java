@@ -34,15 +34,18 @@ public class JSONObjectAttrable extends AbstractAttrable implements Serializable
       this.attr = attr;
    }
 
+   @Override
    public boolean hasAttr(String key) {
       return this.attr.containsKey(key);
    }
 
+   @Override
    public <T> T getAttr(String key, Class<T> targetType) {
       Object obj = this.attr.get(key);
       return convert(obj, targetType);
    }
 
+   @Override
    @JSONField(
       serialize = false
    )
@@ -51,18 +54,22 @@ public class JSONObjectAttrable extends AbstractAttrable implements Serializable
       return (String[])keys.toArray(new String[keys.size()]);
    }
 
+   @Override
    public void setAttr(String key, Object value) {
       this.attr.put(key, value);
    }
 
+   @Override
    public void setAttrs(Map<String, ?> map) {
       this.attr.putAll(map);
    }
 
+   @Override
    public void removeAttr(String key) {
       this.attr.remove(key);
    }
 
+   @Override
    protected Object clone() throws CloneNotSupportedException {
       JSONObjectAttrable obj = (JSONObjectAttrable)super.clone();
       JSONObject json = new JSONObject();

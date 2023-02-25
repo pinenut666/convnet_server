@@ -12,10 +12,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ModifyGroupProcessor extends AbstractProcessor {
+   @Override
    public Cmd accept() {
       return Cmd.MODIFY_GROUP;
    }
 
+   @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
       Group group1 = this.groupManager.getGroup(request.getIntParam("groupid"));
       if (!StringUtils.equals(request.getParam("pass"), "NOCHANGE")) {

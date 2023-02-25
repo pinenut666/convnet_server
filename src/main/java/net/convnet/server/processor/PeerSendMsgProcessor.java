@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class PeerSendMsgProcessor extends AbstractProcessor {
+   @Override
    public Cmd accept() {
       return Cmd.SEND_MSGTO_ID;
    }
 
+   @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
       int targetuserid = request.getIntParam("userid");
       this.userManager.getUser(targetuserid);

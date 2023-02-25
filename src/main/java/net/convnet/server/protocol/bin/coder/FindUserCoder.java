@@ -13,19 +13,23 @@ import java.util.List;
 
 @Service
 public class FindUserCoder extends AbstractPacketCoder {
+   @Override
    public Cmd getCmd() {
       return Cmd.FIND_USER;
    }
 
+   @Override
    public Cmd getRespCmd() {
       return Cmd.FIND_USER_RESP;
    }
 
+   @Override
    public void decode(RequestBuilder builder, BinaryPacket packet) {
       builder.set("type", packet.get(0));
       builder.set("value", packet.get(1));
    }
 
+   @Override
    public void encode(ResponseReader reader, BinaryPacket packet) {
       List<User> users = reader.getAttr("users");
       if (users == null) {

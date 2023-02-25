@@ -14,10 +14,12 @@ import java.util.Collections;
 
 @Service
 public class CreateGroupProcessor extends AbstractProcessor {
+   @Override
    public Cmd accept() {
       return Cmd.CREATE_GROUP;
    }
 
+   @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
       Group group = this.groupManager.getGroupByName(request.getParam("groupname"));
       if (group != null) {

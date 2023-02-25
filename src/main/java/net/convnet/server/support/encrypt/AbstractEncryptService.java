@@ -37,14 +37,17 @@ public abstract class AbstractEncryptService implements EncryptService, Initiali
       this.decryptKey = decryptKey;
    }
 
+   @Override
    public String encrypt(String str) throws GeneralSecurityException {
       return Codecs.encode(this.encrypt(Codecs.getBytes(str)));
    }
 
+   @Override
    public String decrypt(String str) throws GeneralSecurityException {
       return Codecs.toString(this.decrypt(Codecs.decode(str)));
    }
 
+   @Override
    public byte[] encrypt(byte[] bytes) throws GeneralSecurityException {
       if (this.encryptCipher == null) {
          throw new IllegalStateException("EncryptCipher not init");
@@ -53,6 +56,7 @@ public abstract class AbstractEncryptService implements EncryptService, Initiali
       }
    }
 
+   @Override
    public byte[] decrypt(byte[] bytes) throws GeneralSecurityException {
       if (this.decryptCipher == null) {
          throw new IllegalStateException("DecryptCipher not init");
@@ -61,6 +65,7 @@ public abstract class AbstractEncryptService implements EncryptService, Initiali
       }
    }
 
+   @Override
    public void afterPropertiesSet() throws Exception {
       if (this.encryptKey == null) {
          this.encryptKey = this.key;

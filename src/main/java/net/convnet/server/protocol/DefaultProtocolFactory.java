@@ -16,17 +16,16 @@ public final class DefaultProtocolFactory implements ProtocolFactory {
    }
 
    public void setProtocols(List<Protocol> protocols) {
-      Iterator i$ = protocols.iterator();
 
-      while(i$.hasNext()) {
-         Protocol protocol = (Protocol)i$.next();
+      for (Protocol protocol : protocols) {
          this.protocols.put(protocol.getVersion(), protocol);
       }
 
    }
 
+   @Override
    public Protocol getProtocol(int version) {
-      Protocol protocol = (Protocol)this.protocols.get(version);
+      Protocol protocol = this.protocols.get(version);
       if (protocol == null) {
          throw new ConvnetException("Protocol impl for version " + version + " not found");
       } else {
@@ -34,6 +33,7 @@ public final class DefaultProtocolFactory implements ProtocolFactory {
       }
    }
 
+   @Override
    public Protocol getDefaultProtocol() {
       return this.getProtocol(this.defaultVersion);
    }

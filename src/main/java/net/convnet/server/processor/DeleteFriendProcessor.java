@@ -11,10 +11,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class DeleteFriendProcessor extends AbstractProcessor {
+   @Override
    public Cmd accept() {
       return Cmd.DEL_FRIEND;
    }
 
+   @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
       int targetUserId = request.getIntParam("id");
       User targetuser = this.userManager.getUser(targetUserId);

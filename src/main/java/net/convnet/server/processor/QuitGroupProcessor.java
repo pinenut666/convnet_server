@@ -15,10 +15,12 @@ import java.util.Objects;
 
 @Service
 public class QuitGroupProcessor extends AbstractProcessor {
+   @Override
    public Cmd accept() {
       return Cmd.QUIT_GROUP;
    }
 
+   @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
       int targetGroup = request.getIntParam("groupid");
       Group group = this.groupManager.getGroup(targetGroup);

@@ -36,6 +36,7 @@ public final class Server implements Lifecycle, InitializingBean, DisposableBean
       this.poolSize = poolSize;
    }
 
+   @Override
    public void start() {
       if (this.running) {
          LOG.info("Already running");
@@ -58,6 +59,7 @@ public final class Server implements Lifecycle, InitializingBean, DisposableBean
       }
    }
 
+   @Override
    public void stop() {
       if (this.running) {
          this.bossGroup.shutdownGracefully();
@@ -67,14 +69,17 @@ public final class Server implements Lifecycle, InitializingBean, DisposableBean
 
    }
 
+   @Override
    public boolean isRunning() {
       return this.running;
    }
 
+   @Override
    public void destroy() throws Exception {
       this.stop();
    }
 
+   @Override
    public void afterPropertiesSet() throws Exception {
       this.bossGroup = new NioEventLoopGroup();
       this.workerGroup = new NioEventLoopGroup(this.poolSize);

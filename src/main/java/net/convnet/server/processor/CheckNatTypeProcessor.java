@@ -15,10 +15,12 @@ import java.net.*;
 
 @Service
 public class CheckNatTypeProcessor extends AbstractProcessor {
+   @Override
    public Cmd accept() {
       return Cmd.CHECK_NAT_TYPE;
    }
 
+   @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
       int udpport = request.getIntParam("udpport");
       int tcpport = request.getIntParam("tcpport");

@@ -6,6 +6,7 @@ import com.alibaba.fastjson.util.TypeUtils;
 public final class FastjsonConverter implements Converter {
    public static Converter INSTANCE = new FastjsonConverter();
 
+   @Override
    public <T> T convert(Object value, Class<T> targetType) {
       if (value == null) {
          return null;

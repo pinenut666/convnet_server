@@ -15,22 +15,24 @@ import java.util.List;
 
 @Service
 public class FindGroupCoder extends AbstractPacketCoder {
-   @Autowired
-   private SessionManager sessionManager;
 
+   @Override
    public Cmd getCmd() {
       return Cmd.FIND_GROUP;
    }
 
+   @Override
    public Cmd getRespCmd() {
       return Cmd.FIND_GROUP_RESP;
    }
 
+   @Override
    public void decode(RequestBuilder builder, BinaryPacket packet) {
       builder.set("type", packet.get(0));
       builder.set("value", packet.get(1));
    }
 
+   @Override
    public void encode(ResponseReader reader, BinaryPacket packet) {
       List<Group> groups = reader.getAttr("groups");
       if (groups == null) {

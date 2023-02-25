@@ -25,6 +25,7 @@ final class ProcessFilter extends AbstractFilter {
 
    }
 
+   @Override
    public void doFilter(Session session, Request request, Response response, FilterChain chain) throws ConvnetException {
       Processor processor = (Processor)this.processors.get(request.getCmd());
       if (processor != null) {

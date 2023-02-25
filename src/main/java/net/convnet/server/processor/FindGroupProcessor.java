@@ -12,10 +12,12 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class FindGroupProcessor extends AbstractProcessor {
+   @Override
    public Cmd accept() {
       return Cmd.FIND_GROUP;
    }
 
+   @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
       User user = session.getUser();
       if (user.SoIfICanAddfriend()) {

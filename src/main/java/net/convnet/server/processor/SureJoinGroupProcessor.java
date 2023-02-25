@@ -14,16 +14,18 @@ import java.util.Iterator;
 
 @Service
 public class SureJoinGroupProcessor extends AbstractProcessor {
+   @Override
    public Cmd accept() {
       return Cmd.PEER_SURE_JOIN_GROUP;
    }
 
+   @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
       response.setOutput(false);
       User orderUser = this.sessionManager.getSession(request.getIntParam("userid")).getUser();
       this.groupManager.dealGroupRequest(request.getIntParam("userid"), request.getIntParam("groupid"), false);
       int orderUserid = orderUser.getId();
-      if (request.getParam("isallow").equals("T")) {
+      if ("T".equals(request.getParam("isallow"))) {
          Group group = this.groupManager.getGroup(request.getIntParam("groupid"));
          //修改
          if (!groupManager.getGroupAdminList(group.getId()).contains(session.getUser().getId())) {

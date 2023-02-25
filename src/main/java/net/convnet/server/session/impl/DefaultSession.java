@@ -29,18 +29,22 @@ abstract class DefaultSession extends JSONObjectAttrable implements Session {
       this.channel.attr(ATTR_KEY).set(this);
    }
 
+   @Override
    public long getId() {
       return this.id;
    }
 
+   @Override
    public int getUserId() {
       return this.userId;
    }
 
+   @Override
    public Channel getChannel() {
       return this.channel;
    }
 
+   @Override
    public String getIp() {
       if (this.ip == null) {
          this.fillAddress();
@@ -49,6 +53,7 @@ abstract class DefaultSession extends JSONObjectAttrable implements Session {
       return this.ip;
    }
 
+   @Override
    public int getPort() {
       if (this.port == null) {
          this.fillAddress();
@@ -63,6 +68,7 @@ abstract class DefaultSession extends JSONObjectAttrable implements Session {
       this.port = address.getPort();
    }
 
+   @Override
    public String getMac() {
       return this.getAttr("mac");
    }
@@ -71,6 +77,7 @@ abstract class DefaultSession extends JSONObjectAttrable implements Session {
       this.mac = mac;
    }
 
+   @Override
    public int getProtocolVersion() {
       return this.protocolVersion;
    }
@@ -87,14 +94,17 @@ abstract class DefaultSession extends JSONObjectAttrable implements Session {
       this.closed = closed;
    }
 
+   @Override
    public void destory() {
       this.channel.attr(ATTR_KEY).remove();
    }
 
+   @Override
    public long getWriteBytes() {
       return this.def((Long)this.channel.attr(Constants.WRITE_BYTES_KEY).get(), 0L);
    }
 
+   @Override
    public long getReadBytes() {
       return this.def((Long)this.channel.attr(Constants.READ_BYTES_KEY).get(), 0L);
    }

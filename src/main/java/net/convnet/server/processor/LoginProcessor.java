@@ -18,10 +18,12 @@ import java.util.Iterator;
 
 @Service
 public class LoginProcessor extends AbstractProcessor {
+   @Override
    public Cmd accept() {
       return Cmd.LOGIN;
    }
 
+   @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
       if (session.isLogin()) {
          throw new ConvnetException("Already logined");

@@ -27,7 +27,9 @@ import java.util.List;
 @Transactional(readOnly = false)
 @Service
 public class UserManagerImpl implements UserManager {
+    //提供加盐修改接口？
     public String salt = "_t[er,z59)]x7c&d;x24v%";
+    @Autowired
     private EncryptService encryptService;
     @Autowired
     protected UserMapper userMapper;
@@ -39,16 +41,6 @@ public class UserManagerImpl implements UserManager {
     protected FriendMapper friendMapper;
     @Autowired
     protected GroupUserMapper groupUserMapper;
-
-
-    //暂时不确定加盐的实现机制
-    public void setSalt(String salt) {
-        this.salt = salt;
-    }
-
-    public void setEncryptService(EncryptService encryptService) {
-        this.encryptService = encryptService;
-    }
 
     //获取user
     @Override
@@ -262,7 +254,8 @@ public class UserManagerImpl implements UserManager {
     public int getTodayRegistUserCountFromIp(String IP) {
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.gt(User::getCreateAt, DateUtil.getLocalDateTime(new Date())).eq(User::getRegisterIp, IP);
-        return userMapper.selectCount(wrapper);
+        //新版本Mybatis返回的是long，只能如此转换
+        return Math.toIntExact(userMapper.selectCount(wrapper));
     }
 
     @Override

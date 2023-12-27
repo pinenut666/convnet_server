@@ -46,3 +46,12 @@ knife4j:
     enable: true
     setting:
         language: zh_cn
+# 关闭Mybatis-Plus的Banner
+mybatis-plus:
+    global-config:
+        banner: false
+    configuration:
+        cache-enabled: true
+# 关闭sa-token的banner
+sa-token:
+    is-print: false

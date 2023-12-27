@@ -43,14 +43,6 @@ public class AppConfig extends AbstractConfig {
     @Value("${props.udpPorts}")
     private int[] udpPorts;
 
-
-    @Bean
-    public UserManager userManager(EncryptService encryptService) {
-        UserManagerImpl userManager = new UserManagerImpl();
-        userManager.setEncryptService(encryptService);
-        return userManager;
-    }
-
     //加密相关配置
     @Bean
     public EncryptService encryptService() {

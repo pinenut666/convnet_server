@@ -13,15 +13,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 
-@RestController
-@Slf4j
-@RequestMapping("/group")
+
+
 
 /**
  * 用户组创建
  * 部分源代码来源：goufn
  * @author Administrator
  */
+@RestController
+@Slf4j
+@RequestMapping("/group")
 public class GroupController {
    @Autowired
    private GroupManager groupManager;

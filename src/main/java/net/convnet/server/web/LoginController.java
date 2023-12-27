@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RestController
+@RequestMapping("/login")
 public class LoginController {
 
    @Autowired
@@ -63,7 +64,7 @@ public class LoginController {
       lineCaptcha.write(out);
       out.close();
    }
-   //用户登录
+   //管理员登录
    @PostMapping("login")
    public CommonResult<Object> userlogin(@RequestBody LoginBean loginBean, HttpServletRequest request) {
       String username = loginBean.getName();
@@ -77,11 +78,11 @@ public class LoginController {
          return CommonResult.error("验证码不正确");
       }
       User user = this.userManager.validateUser(username, password);
-      //TODO:更合理的管理员
-      if (user == null) {
+      StpUtil.login(user.getId());
+      if (!StpUtil.hasRole("admin")) {
+         StpUtil.logout();
          return CommonResult.error("用户名或密码错误,或者不是管理员");
       }
-      StpUtil.login(user.getId());
       return CommonResult.success("登录成功");
    }
    //用户注册
@@ -150,9 +151,5 @@ public class LoginController {
          return CommonResult.error("验证码无效");
       }
    }
-
-
-
-
 
 }

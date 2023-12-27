@@ -17,7 +17,6 @@ public class GetFriendsInfoProcessor extends AbstractProcessor {
 
    @Override
    public void process(Session session, Request request, Response response) throws ConvnetException {
-      //TODO:看来以后要从这里面究极折磨了
       response.setAttr("friends", userManager.getUserFriends(session.getUser().getId()));
    }
 }

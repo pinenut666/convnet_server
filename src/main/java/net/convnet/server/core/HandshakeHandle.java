@@ -23,15 +23,12 @@ final class HandshakeHandle extends ChannelInboundHandlerAdapter {
          if (LOG.isDebugEnabled()) {
             final StringBuilder sb = new StringBuilder(in.readableBytes());
             sb.append("\n---------------------------------------------------------------------------------------------\n");
-            in.forEachByte(new ByteProcessor() {
-               @Override
-               public boolean process(byte value) throws Exception {
-                  sb.append(Hex.encodeHex(new byte[]{value})).append(" ");
-                  return true;
-               }
+            in.forEachByte(value -> {
+               sb.append(Hex.encodeHex(new byte[]{value})).append(" ");
+               return true;
             });
             sb.append("\n----------------------------------------------------------------------------------------------\n");
-            LOG.info("Packet |" + sb.toString() + "|");
+            LOG.info("Packet |" + sb + "|");
             LOG.info("Packet string >>|" + in.toString(Constants.CHARSET) + "|<<");
             sb.append("\n----------------------------------------------------------------------------------------------\n");
          }

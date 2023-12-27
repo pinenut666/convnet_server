@@ -20,11 +20,11 @@ import java.util.Map;
 
 @Service
 public class CallToUserProcessor extends AbstractProcessor implements ApplicationContextAware, InitializingBean {
-   @Value("#{props.forceTrans}")
+   @Value("${props.forceTrans}")
    private boolean forceTrans;
    private static final Logger LOG = LoggerFactory.getLogger(CallToUserProcessor.class);
    private ApplicationContext appCtx;
-   private Map<P2PCallType, CallProcessor> callProcessors = new HashMap();
+   private Map<P2PCallType, CallProcessor> callProcessors = new HashMap<>();
 
    public void setCallProcessors(Map<P2PCallType, CallProcessor> callProcessors) {
       this.callProcessors = callProcessors;
@@ -192,10 +192,8 @@ public class CallToUserProcessor extends AbstractProcessor implements Applicatio
 
    @Override
    public void afterPropertiesSet() throws Exception {
-      Iterator i$ = this.appCtx.getBeansOfType(CallProcessor.class).values().iterator();
 
-      while(i$.hasNext()) {
-         CallProcessor callProcessor = (CallProcessor)i$.next();
+      for (CallProcessor callProcessor : this.appCtx.getBeansOfType(CallProcessor.class).values()) {
          this.callProcessors.put(callProcessor.accept(), callProcessor);
       }
 

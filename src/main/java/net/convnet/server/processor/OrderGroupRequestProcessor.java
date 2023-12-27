@@ -30,10 +30,8 @@ public class OrderGroupRequestProcessor extends AbstractProcessor {
       String grouppass = group.getPassword();
       if (grouppass.equals(description) && !"".equals(description)) {
          this.groupManager.joinGroup(user, group);
-         Iterator i$ = userManager.getUserByGroupId(group.getId()).iterator();
 
-         while(i$.hasNext()) {
-            User groupuser = (User)i$.next();
+         for (User groupuser : userManager.getUserByGroupId(group.getId())) {
             response.setOutput(false);
             int userid = groupuser.getId();
             if (this.sessionManager.isOnline(userid)) {

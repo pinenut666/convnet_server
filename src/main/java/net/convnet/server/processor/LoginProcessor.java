@@ -83,7 +83,7 @@ public class LoginProcessor extends AbstractProcessor {
                session.getChannel().pipeline().remove("speedLimit");
                session.getChannel().pipeline().addAfter("handshake", "speedLimit", new ChannelTrafficShapingHandler(user.getReciveLimit(), 0L));
             }
-            //TODO：此处应该为获取对应userEx，若没有，则添加
+            //此处应该为获取对应userEx，若没有，则添加
             UserEx userEx = userManager.getUserEx(user.getId());
             if(userEx==null)
             {

@@ -1,0 +1,57 @@
+logging:
+    level:
+        net:
+            convnet:
+                server:
+                    core: DEBUG
+props:
+    admin:
+        names: yuyuhaso,admin
+    allUserQuitGroup: false
+    allowregist: true
+    canCreateGroup: true
+    canJoinGroup: true
+    defaultPass: '"xxxxxx"'
+    defaultUserLimitSend: 1000000
+    forceTrans: false
+    forceUseMailCheck: false
+    listen: 0.0.0.0:8822
+    maxRigistCount: 10
+    poolSize: 0
+    reset:
+        url: http://218.94.2.162/convnet-server/reset?code=
+    udpPorts: 8081,8080
+    updateURL: http://218.94.2.162/convnet/1232.inf
+spring:
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        password: password
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://127.0.0.1/convnet?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=UTC
+        username: root
+# springdoc-openapi项目配置
+springdoc:
+    swagger-ui:
+        path: /swagger-ui.html
+        tags-sorter: alpha
+        operations-sorter: alpha
+    api-docs:
+        path: /v3/api-docs
+    group-configs:
+        - group: 'default'
+          paths-to-match: '/**'
+          packages-to-scan: net.convnet.server.web
+# knife4j的增强配置，不需要增强可以不配
+knife4j:
+    enable: true
+    setting:
+        language: zh_cn
+# 关闭Mybatis-Plus的Banner
+mybatis-plus:
+    global-config:
+        banner: false
+    configuration:
+        cache-enabled: true
+# 关闭sa-token的banner
+sa-token:
+    is-print: false

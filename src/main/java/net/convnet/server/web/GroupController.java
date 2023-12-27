@@ -12,11 +12,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+
+
+
+
+/**
+ * 用户组创建
+ * 部分源代码来源：goufn
+ * @author Administrator
+ */
 @RestController
 @Slf4j
 @RequestMapping("/group")
-//以下均为自由发挥内容
-//源代码来源：goufn
 public class GroupController {
    @Autowired
    private GroupManager groupManager;

@@ -2,6 +2,7 @@ package net.convnet.server.protocol.bin;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.util.ByteProcessor;
+import lombok.ToString;
 import net.convnet.server.Constants;
 import net.convnet.server.ex.CodecException;
 import net.convnet.server.ex.ConvnetException;
@@ -9,6 +10,8 @@ import net.convnet.server.ex.ExceptionUtils;
 import net.convnet.server.protocol.*;
 import net.convnet.server.util.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
@@ -17,8 +20,12 @@ import org.springframework.dao.DataAccessException;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+/**
+ * @author yuyuhaso
+ */
 
 public final class BinaryProtocol implements Protocol, ApplicationContextAware, InitializingBean {
+   private static final Logger LOG = LoggerFactory.getLogger(BinaryProtocol.class);
    public static final int VERSION = 1;
    public static final String VERSION_CODE = "4.2";
    public static final char SEPARATOR = ',';
@@ -33,18 +40,19 @@ public final class BinaryProtocol implements Protocol, ApplicationContextAware, 
 
    @Override
    public int getVersion() {
-      return 1;
+      return VERSION;
    }
 
    @Override
    public String getVersionCode() {
-      return "4.2";
+      return VERSION_CODE;
    }
 
    @Override
    public Request decode(ByteBuf buff) {
       BinaryPacket packet = this.parseBinaryPacket(buff);
       DefaultRequest request = new DefaultRequest(packet.getCmd(), this.getVersion());
+      LOG.debug("Request send is" + request);
       this.getCoder(packet.getCmd()).decode(request, packet);
       return request;
    }
@@ -85,6 +93,7 @@ public final class BinaryProtocol implements Protocol, ApplicationContextAware, 
 
    @Override
    public void encode(ResponseReader reader, ByteBuf buff) {
+      LOG.debug("Response send is" + reader);
       if (reader.needOutput()) {
          Cmd cmd = reader.getCmd();
          if (cmd == Cmd.SERVER_TRANS) {
@@ -99,7 +108,7 @@ public final class BinaryProtocol implements Protocol, ApplicationContextAware, 
             sb.append(cmd.toOrdinal());
 
             for (Object part : packet.getParts()) {
-               sb.append(',');
+               sb.append(SEPARATOR);
                if (part instanceof Boolean) {
                   sb.append((Boolean) part ? 'T' : 'F');
                } else if (part != null) {
@@ -143,8 +152,7 @@ public final class BinaryProtocol implements Protocol, ApplicationContextAware, 
    }
 
    private PacketCoder getCoder(Cmd cmd) {
-      //这里的指令初始化并没有我们的实现类
-      PacketCoder coder = (PacketCoder)this.packetCoders.get(cmd);
+      PacketCoder coder = this.packetCoders.get(cmd);
       if (coder == null) {
          throw new CodecException("PacketCoder for cmd [" + cmd + "] not found");
       } else {
@@ -169,19 +177,19 @@ public final class BinaryProtocol implements Protocol, ApplicationContextAware, 
    public void afterPropertiesSet() throws Exception {
       //加载实现类的
       Collection<PacketCoder> pack = appCtx.getBeansOfType(PacketCoder.class).values();
-      String[] a = appCtx.getBeanNamesForType(PacketCoder.class);
+//      String[] a = appCtx.getBeanNamesForType(PacketCoder.class);
+//
+//      for(String beanname:a)
+//      {
+//         PacketCoder coder = (PacketCoder) appCtx.getBean(beanname);
+//         this.packetCoders.put(coder.getCmd(), coder);
+//         this.packetCoders.put(coder.getRespCmd(), coder);
+//      }
 
-      for(String beanname:a)
-      {
-         PacketCoder coder = (PacketCoder) appCtx.getBean(beanname);
+      for(PacketCoder coder:appCtx.getBeansOfType(PacketCoder.class).values()) {
          this.packetCoders.put(coder.getCmd(), coder);
          this.packetCoders.put(coder.getRespCmd(), coder);
       }
-
-/*      for(PacketCoder coder:appCtx.getBeansOfType(PacketCoder.class).values()) {
-         this.packetCoders.put(coder.getCmd(), coder);
-         this.packetCoders.put(coder.getRespCmd(), coder);
-      }*/
 
       for(CoderMapping mapping:this.coderMappings) {
          this.packetCoders.put(mapping.getCmd(), mapping);

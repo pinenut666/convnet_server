@@ -1,6 +1,7 @@
-/*
 package net.convnet.server.web;
 
+import net.convnet.server.common.page.PageRequest;
+import net.convnet.server.common.result.CommonResult;
 import net.convnet.server.identity.UserManager;
 import net.convnet.server.mybatis.pojo.User;
 import net.convnet.server.session.Session;
@@ -8,112 +9,65 @@ import net.convnet.server.session.SessionManager;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping({"user"})
+/***
+ * @author Administrator
+ * @date 2023/12/27/027 9:47
+ * @version 1.0
+ */
+@RestController
+@RequestMapping("/user")
 public class UserController {
-   @Autowired
-   private UserManager userManager;
-   @Autowired
-   private SessionManager sessionManager;
+    @Autowired
+    private UserManager userManager;
+    @Autowired
+    private SessionManager sessionManager;
 
-   @ModelAttribute("user")
-   public User getFile(@RequestParam(value = "id",required = false) Integer id) throws Exception {
-      return id == null ? new User() : this.userManager.getUser(id);
-   }
+    //获取所有用户信息
+    @PostMapping(value = "/findPage")
+    public CommonResult<Object> findPage(@RequestBody PageRequest pageRequest) {
+        return CommonResult.success(userManager.findPage(pageRequest));
+    }
 
-   @RequestMapping(
-      method = {RequestMethod.GET}
-   )
-   public String index(Model model, @RequestParam(value = "isonline",required = false) Boolean isonline, @RequestParam(value = "name",required = false) String name) throws Exception {
-      if (isonline == null) {
-         isonline = false;
-      }
-      //TODO：实现该部分
-     // Page<User> page = this.userManager.findUser(name, request, isonline);
-      model.addAttribute("name", name);
-      model.addAttribute("isonline", isonline);
-    //  model.addAttribute("page", page);
-      return "user/index";
-   }
+    //删除用户
+    @PostMapping("delete")
+    public CommonResult<Object> deleteUser(@RequestParam int id) {
+        try {
+            userManager.removeUser(id);
+            return CommonResult.success("删除成功");
+        } catch (Exception e) {
+            return CommonResult.error("失败，原因为" + e.getMessage());
+        }
+    }
 
-   @RequestMapping(
-      value = {"delete"},
-      method = {RequestMethod.GET}
-   )
-   public String delete(@RequestParam("id") int id) throws Exception {
-      this.userManager.removeUser(id);
-      return "redirect:/user";
-   }
+    //给用户发送信息
+    @PostMapping("sendMessage")
+    public CommonResult<Object> sendMessage(@RequestParam("id") int id, @RequestParam("message") String message) throws Exception {
+        if (this.sessionManager.sendMessageToUser(this.userManager.getUser(id), message)) {
+            return CommonResult.success("发送成功");
+        }
+        return CommonResult.error("发送失败");
+    }
 
-   @RequestMapping(
-      value = {"edit"},
-      method = {RequestMethod.GET}
-   )
-   public String edit() throws Exception {
-      return "user/edit";
-   }
-
-   @RequestMapping(
-      value = {"edit"},
-      method = {RequestMethod.POST}
-   )
-   public String save(@ModelAttribute("user") User user, RedirectAttributes ra) throws Exception {
-      try {
-         if (StringUtils.isNotBlank(user.getPassword())) {
+    //修改用户信息
+    @PostMapping("edit")
+    public CommonResult<Object> save(User user) throws Exception {
+        //修改密码需要特殊加密
+        if (StringUtils.isNotBlank(user.getPassword())) {
             this.userManager.setPassword(user, user.getPassword());
-         }
+        }
+        this.userManager.saveUser(user);
+        return CommonResult.success("修改成功");
+    }
+    //封禁用户
+    @PostMapping("serverban")
+    public CommonResult<Object> serverBan( int id) throws Exception {
+        Session session = this.sessionManager.getSession(id);
+        if (session != null) {
+            session.destory();
+        }
+        return CommonResult.success("封禁成功");
+    }
 
-         this.userManager.saveUser(user);
-      } catch (Exception var4) {
-         this.failed(ra, var4.getMessage());
-      }
-
-      this.success(ra);
-      return "redirect:/user";
-   }
-
-   @RequestMapping(
-      value = {"sendmessage"},
-      method = {RequestMethod.GET}
-   )
-   public String sendmessage(Model model, @RequestParam("id") int id, RedirectAttributes ra) throws Exception {
-      model.addAttribute("user", this.userManager.getUser(id));
-      return "user/sendmessage";
-   }
-
-   @RequestMapping(
-      value = {"serverban"},
-      method = {RequestMethod.GET}
-   )
-   public String serverban(Model model, @RequestParam("id") int id, RedirectAttributes ra) throws Exception {
-      Session session = this.sessionManager.getSession(id);
-      if (session != null) {
-         session.destory();
-      }
-
-      return "redirect:/user";
-   }
-
-   @RequestMapping(
-      value = {"sendmessagetouser"},
-      method = {RequestMethod.POST}
-   )
-   public String sendmessagetouser(Model model, @RequestParam("id") int id, @RequestParam("message") String message, RedirectAttributes ra) throws Exception {
-      model.addAttribute("id", id);
-      if (this.sessionManager.sendMessageToUser(this.userManager.getUser(id), message)) {
-         model.addAttribute("msg", message + "发送成功");
-      } else {
-         model.addAttribute("msg", message + "发送失败");
-      }
-
-      return "user/sendmessage";
-   }
 }
-*/

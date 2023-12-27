@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class GetServerPortProcessor extends AbstractProcessor {
-   @Value("#{props.udpPorts}")
+   @Value("${props.udpPorts}")
    private String updPorts;
 
    @Override

@@ -12,11 +12,12 @@ import net.convnet.server.identity.ResetCodeManager;
 import net.convnet.server.identity.UserManager;
 import net.convnet.server.mybatis.pojo.ResetCode;
 import net.convnet.server.mybatis.pojo.User;
+import net.convnet.server.web.pojo.LoginBean;
+import net.convnet.server.web.pojo.RegisterBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import net.convnet.server.web.pojo.*;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RestController
+@RequestMapping("/login")
 public class LoginController {
 
    @Autowired
@@ -33,25 +35,22 @@ public class LoginController {
    private EmailSender emailSender;
    @Autowired
    private ResetCodeManager resetCodeManager;
-   @Value("#{props['reset.url']}")
+   @Value("${props.reset.url}")
    private String resetUrl;
-   @Value("#{props.listen}")
+   @Value("${props.listen}")
    private String listen;
-   @Value("#{props.allowregist}")
+   @Value("${props.allowregist}")
    private boolean allowregist;
-   @Value("#{props['maxRigistCount']}")
+   @Value("${props.maxRigistCount}")
    private int maxRigistCount;
-   @Value("#{props['forceUseMailCheck']}")
+   @Value("${props.forceUseMailCheck}")
    private boolean forceUseMailCheck;
-   @Value("#{props['defaultPass']}")
+   @Value("${props.defaultPass}")
    private String defaultPass;
-   @Value("#{props.canCreateGroup}")
+   @Value("${props.canCreateGroup}")
    private boolean canCreateGroup;
-   @Value("#{props.canJoinGroup}")
+   @Value("${props.canJoinGroup}")
    private boolean canJoinGroup;
-
-
-
 
    //验证码功能
    @GetMapping("captcha.jpg")
@@ -59,13 +58,13 @@ public class LoginController {
       response.setHeader("Cache-Control", "no-store, no-cache");
       response.setContentType("image/jpeg");
       // HUTOOL生成验证码
-      LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(200, 100);
+      LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(100, 50);
       request.getSession().setAttribute("KAPTCHA_SESSION_KEY", lineCaptcha.getCode());
       ServletOutputStream out = response.getOutputStream();
       lineCaptcha.write(out);
       out.close();
    }
-   //用户登录
+   //管理员登录
    @PostMapping("login")
    public CommonResult<Object> userlogin(@RequestBody LoginBean loginBean, HttpServletRequest request) {
       String username = loginBean.getName();
@@ -79,16 +78,16 @@ public class LoginController {
          return CommonResult.error("验证码不正确");
       }
       User user = this.userManager.validateUser(username, password);
-      //TODO:更合理的管理员
-      if (user == null) {
+      StpUtil.login(user.getId());
+      if (!StpUtil.hasRole("admin")) {
+         StpUtil.logout();
          return CommonResult.error("用户名或密码错误,或者不是管理员");
       }
-      StpUtil.login(user.getId());
       return CommonResult.success("登录成功");
    }
    //用户注册
    @PostMapping("/regist")
-   public CommonResult<Object> userRegist(RegisterBean registerBean,HttpServletRequest request){
+   public CommonResult<Object> userRegist(RegisterBean registerBean, HttpServletRequest request){
       if(!allowregist)
       {
          return CommonResult.error("不允许注册");
@@ -139,20 +138,18 @@ public class LoginController {
       }
    }
 
-
+   //用户重置密码
    @GetMapping("/reset")
-   public String reset(@RequestParam(value = "code",required = false) String code) throws Exception {
+   public CommonResult<Object> reset(String code, String password) throws Exception {
       User user = this.resetCodeManager.getUserByResetCode(code);
       if (user != null) {
-
+         //修改用户的密码
+         user.setPassword(password);
+         this.userManager.saveUser(user);
+         return CommonResult.success("用户密码修改成功，现在可以登录了");
       } else {
-         return "";
+         return CommonResult.error("验证码无效");
       }
-      return "";
    }
-
-
-
-
 
 }

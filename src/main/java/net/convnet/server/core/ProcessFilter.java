@@ -16,10 +16,8 @@ final class ProcessFilter extends AbstractFilter {
    private final Map<Cmd, Processor> processors = new HashMap();
 
    ProcessFilter(Collection<Processor> processors) {
-      Iterator i$ = processors.iterator();
 
-      while(i$.hasNext()) {
-         Processor processor = (Processor)i$.next();
+      for (Processor processor : processors) {
          this.processors.put(processor.accept(), processor);
       }
 

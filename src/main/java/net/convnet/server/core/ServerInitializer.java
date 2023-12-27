@@ -33,7 +33,7 @@ public final class ServerInitializer extends ChannelInitializer<SocketChannel> i
    private FilterChain chain;
    private ChannelHandler handshakeHandle;
    private ChannelHandler encoderHandle;
-   @Value("#{props.defaultUserLimitSend}")
+   @Value("${props.defaultUserLimitSend}")
    private int defaultUserLimitSend;
 
    public void setProtocolFactory(ProtocolFactory protocolFactory) {

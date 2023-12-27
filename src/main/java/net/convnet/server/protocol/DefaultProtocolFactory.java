@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public final class DefaultProtocolFactory implements ProtocolFactory {
-   private final Map<Integer, Protocol> protocols = new HashMap();
+   private final Map<Integer, Protocol> protocols = new HashMap<>();
    private int defaultVersion = 1;
 
    public void setDefaultVersion(int defaultVersion) {

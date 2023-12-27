@@ -26,10 +26,8 @@ public class KickoutGroupProcessor extends AbstractProcessor {
       Group group = this.groupManager.getGroup(request.getIntParam("groupid"));
       response.setOutput(false);
       if (Objects.equals(session.getUser().getId(), group.getCreatorId())) {
-         Iterator i$ = userManager.getUserByGroupId(group.getId()).iterator();
 
-         while(i$.hasNext()) {
-            User user = (User)i$.next();
+         for (User user : userManager.getUserByGroupId(group.getId())) {
             Session usersession = this.sessionManager.getSession(user.getId());
             if (usersession != null) {
                Response response1 = this.createResponse(usersession, Cmd.KICK_OUT_RESP);

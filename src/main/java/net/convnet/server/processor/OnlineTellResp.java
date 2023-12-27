@@ -26,18 +26,16 @@ public class OnlineTellResp extends AbstractProcessor {
 
    private void TellUserOnline(User user) {
       int userid = user.getId();
-      Iterator i$ = userManager.getUserFriends(user.getId()).iterator();
-      while(i$.hasNext()) {
-         User tmpuser = (User)i$.next();
+      //个人通知
+      for (User tmpuser : userManager.getUserFriends(user.getId())) {
          Session session = this.sessionManager.getSession(tmpuser.getId());
          if (session != null) {
-            Response resposne1 = this.createResponse(session, Cmd.ONLINE_TELL_RESP);
-            resposne1.setAttr("who", userid);
-            this.write(session, resposne1);
+            Response response = this.createResponse(session, Cmd.ONLINE_TELL_RESP);
+            response.setAttr("who", userid);
+            this.write(session, response);
          }
       }
-
-
+      //组内通知
       for(Group group1:groupManager.getGroupByUserId(user.getId())) {
          for (User user1 : userManager.getUserByGroupId(group1.getId())) {
             int userid2 = user1.getId();

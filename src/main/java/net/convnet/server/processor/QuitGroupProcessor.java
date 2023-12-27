@@ -25,16 +25,14 @@ public class QuitGroupProcessor extends AbstractProcessor {
       int targetGroup = request.getIntParam("groupid");
       Group group = this.groupManager.getGroup(targetGroup);
       if (group != null) {
-         Iterator i$;
          User user;
          Session session1;
          Response response1;
          if (Objects.equals(session.getUser().getId(), group.getCreatorId())) {
             response.setOutput(false);
-            i$ = userManager.getUserByGroupId(group.getId()).iterator();
 
-            while(i$.hasNext()) {
-               user = (User)i$.next();
+            for (User value : userManager.getUserByGroupId(group.getId())) {
+               user = value;
                session1 = this.sessionManager.getSession(user.getId());
                if (session1 != null) {
                   response1 = this.createResponse(session1, Cmd.QUIT_GROUP_RESP);
@@ -46,10 +44,9 @@ public class QuitGroupProcessor extends AbstractProcessor {
 
             this.groupManager.removeGroup(group.getId());
          } else {
-            i$ = userManager.getUserByGroupId(group.getId()).iterator();
 
-            while(i$.hasNext()) {
-               user = (User)i$.next();
+            for (User value : userManager.getUserByGroupId(group.getId())) {
+               user = value;
                session1 = this.sessionManager.getSession(user.getId());
                if (session1 != null) {
                   response1 = this.createResponse(session1, Cmd.QUIT_GROUP_RESP);

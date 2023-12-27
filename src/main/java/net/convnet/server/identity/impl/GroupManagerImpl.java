@@ -3,6 +3,7 @@ package net.convnet.server.identity.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import net.convnet.server.common.page.ColumnFilter;
 import net.convnet.server.common.page.PageRequest;
 import net.convnet.server.common.page.PageResult;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.util.*;
 
 @Transactional(
@@ -99,6 +101,7 @@ public class GroupManagerImpl implements GroupManager {
       return groupMapper.selectOne(wrapper);
    }
    //根据查询信息查询组，看上去像是给前端查询对应分组用的。
+   //默认现在是一次查询20条——似乎某人并没有做分页的样子
    @Override
    public List<Group> findGroup(FindType type, String value, int size) {
       String fieldName = null;
@@ -116,12 +119,19 @@ public class GroupManagerImpl implements GroupManager {
       if("name".equals(fieldName))
       {
          wrapper.like(Group::getName,value);
-         //TODO:观察并分析size参数
+         // 按照 name 字段升序排列
+         wrapper.orderByAsc(Group::getName);
+         // 添加限制条件，限制查询结果的最大数量为 size
+         wrapper.last("LIMIT " + size);
          return groupMapper.selectList(wrapper);
       }
       else
       {
          wrapper.like(Group::getDescription,value);
+         // 按照 name 字段升序排列
+         wrapper.orderByAsc(Group::getName);
+         // 添加限制条件，限制查询结果的最大数量为 size
+         wrapper.last("LIMIT " + size);
          return groupMapper.selectList(wrapper);
       }
 
@@ -150,7 +160,7 @@ public class GroupManagerImpl implements GroupManager {
    }
 
    @Override
-   @Transactional
+   @Transactional(rollbackFor = {RuntimeException.class, SQLException.class})
    public void removeGroup(int id) {
       //由于JPA的缘故，jpa帮我们处理好了删除的问题
       //但是我们这里要手工删掉组和用户的对应关系，再删除组
@@ -165,7 +175,7 @@ public class GroupManagerImpl implements GroupManager {
    }
 
    @Override
-   @Transactional
+   @Transactional(rollbackFor = {RuntimeException.class, SQLException.class})
    public void sendGroupRequest(int userId, int targetGroupId, String description) {
       LambdaQueryWrapper<GroupRequest> wrapper = new LambdaQueryWrapper<>();
       wrapper.eq(GroupRequest::getUserId,userId).eq(GroupRequest::getTargetId,targetGroupId);

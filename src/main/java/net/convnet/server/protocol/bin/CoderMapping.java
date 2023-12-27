@@ -1,10 +1,12 @@
 package net.convnet.server.protocol.bin;
 
+import lombok.AllArgsConstructor;
+import lombok.ToString;
 import net.convnet.server.protocol.Cmd;
 import net.convnet.server.protocol.RequestBuilder;
 import net.convnet.server.protocol.ResponseReader;
 import org.apache.commons.lang3.ArrayUtils;
-
+@ToString
 public final class CoderMapping implements PacketCoder {
    private Cmd cmd;
    private Cmd rCmd;
@@ -15,6 +17,20 @@ public final class CoderMapping implements PacketCoder {
    public CoderMapping() {
       this.encode = ArrayUtils.EMPTY_STRING_ARRAY;
       this.decode = ArrayUtils.EMPTY_STRING_ARRAY;
+   }
+
+   public CoderMapping(Cmd cmd, Cmd rCmd, String[] encode, String[] decode, String star) {
+      this.cmd = cmd;
+      this.rCmd = rCmd;
+      this.encode = encode;
+      this.decode = decode;
+      this.star = star;
+      if(encode==null){
+         this.encode = ArrayUtils.EMPTY_STRING_ARRAY;
+      }
+      if(decode==null){
+         this.decode = ArrayUtils.EMPTY_STRING_ARRAY;
+      }
    }
 
    public void setCmd(Cmd cmd) {

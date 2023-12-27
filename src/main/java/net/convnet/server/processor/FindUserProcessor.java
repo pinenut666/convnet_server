@@ -23,7 +23,7 @@ public class FindUserProcessor extends AbstractProcessor {
       if (user.SoIfICanAddfriend()) {
          response.setAttr("users", this.userManager.findUser(FindType.from(request.getParam("type")), request.getParam("value"), 20));
       } else {
-         response.setAttr("users", (Object)null);
+         response.setAttr("users", null);
       }
 
    }

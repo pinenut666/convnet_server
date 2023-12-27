@@ -32,10 +32,8 @@ public class SureJoinGroupProcessor extends AbstractProcessor {
             return;
          }
          this.groupManager.joinGroup(orderUser, group);
-         Iterator<User> i$ = userManager.getUserByGroupId(group.getId()).iterator();
 
-         while(i$.hasNext()) {
-            User groupuser = i$.next();
+         for (User groupuser : userManager.getUserByGroupId(group.getId())) {
             int userid = groupuser.getId();
             if (this.sessionManager.isOnline(userid)) {
                Session targetSession = this.sessionManager.getSession(userid);

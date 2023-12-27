@@ -31,7 +31,7 @@ public final class SessionManagerImpl implements SessionManager, DisposableBean 
    private List<SessionListener> listeners = new ArrayList<>();
    private ProtocolFactory protocolFactory;
    private UserManager userManager;
-   @Value("#{props.allUserQuitGroup}")
+   @Value("${props.allUserQuitGroup}")
    private boolean allUserQuitGroup;
    @Autowired
    private GroupManager groupManager;
@@ -101,79 +101,122 @@ public final class SessionManagerImpl implements SessionManager, DisposableBean 
                userManager.saveUserEx(userEx);
                final long id = this.getId();
                final int userId = this.getUserId();
-               //设置迭代器
-               Iterator mydiedai;
-               //满足这些条件时
+               //ChatGPT优化过后的代码如下：
                if (SessionManagerImpl.this.sessions.get(userId) == this && userId > 0) {
-                  mydiedai = userManager.getUserFriends(userId).iterator();
-                  while(mydiedai.hasNext()) {
-                     User tmpuser = (User)mydiedai.next();
-                     Session session1x = SessionManagerImpl.this.getSession(tmpuser.getId());
-                     if (session1x != null) {
-                        Response response = SessionManagerImpl.this.getProtocol(session1x).createResponse(Cmd.OFFLINE_TELL_RESP);
+                  // 通知在线好友用户已下线
+                  for (User friend : userManager.getUserFriends(userId)) {
+                     Session friendSession = SessionManagerImpl.this.getSession(friend.getId());
+                     if (friendSession != null) {
+                        Response response = SessionManagerImpl.this.getProtocol(friendSession).createResponse(Cmd.OFFLINE_TELL_RESP);
                         response.setAttr("who", userId);
-                        session1x.getChannel().writeAndFlush(response);
+                        friendSession.getChannel().writeAndFlush(response);
                      }
                   }
 
+                  // 处理用户所在的群组
                   List<Group> groups = groupManager.getGroupByUserId(userId);
-                  Iterator i$ = groups.iterator();
-
-                  label76:
-                  while(true) {
-                     Group group;
-                     label74:
-                     do {
-                        if (!i$.hasNext()) {
-                           break label76;
+                  for (Group group : groups) {
+                     List<User> users = userManager.getUserByGroupId(group.getId());
+                     for (User userInGroup : users) {
+                        if (userInGroup.getId() == userId) {
+                           continue;
                         }
 
-                        group = (Group)i$.next();
-                        //
-                        Iterator i$xx = userManager.getUserByGroupId(group.getId()).iterator();//group.getUsers().iterator();
-
-                        while(true) {
-                           Session session1;
-                           do {
-                              User user1;
-                              int useridtmpid;
-                              do {
-                                 if (!i$xx.hasNext()) {
-                                    continue label74;
-                                 }
-
-                                 user1 = (User)i$xx.next();
-                                 useridtmpid = user1.getId();
-                              } while(userId == useridtmpid);
-
-                              session1 = SessionManagerImpl.this.getSession(user1.getId());
-                           } while(session1 == null);
-
-                           Response response2;
-                           if ((group.getName().startsWith("@") || SessionManagerImpl.this.allUserQuitGroup) && !Objects.equals(group.getCreatorId(), user.getId())) {
-                              response2 = SessionManagerImpl.this.getProtocol(session1).createResponse(Cmd.QUIT_GROUP_RESP);
-                              response2.setAttr("msgtype", "userquit");
-                              response2.setAttr("groupid", group.getId());
-                              response2.setAttr("userid", userId);
-                              session1.getChannel().writeAndFlush(response2);
-                           }
-
-                           response2 = SessionManagerImpl.this.getProtocol(session1).createResponse(Cmd.OFFLINE_TELL_RESP);
-                           response2.setAttr("who", userId);
-                           session1.getChannel().writeAndFlush(response2);
+                        Session userSession = SessionManagerImpl.this.getSession(userInGroup.getId());
+                        if (userSession == null) {
+                           continue;
                         }
-                     } while(!group.getName().startsWith("@") && !SessionManagerImpl.this.allUserQuitGroup);
 
-                     if (!Objects.equals(group.getCreatorId(), user.getId())) {
+                        // 通知群组成员用户已下线
+                        Response response = SessionManagerImpl.this.getProtocol(userSession).createResponse(Cmd.OFFLINE_TELL_RESP);
+                        response.setAttr("who", userId);
+                        userSession.getChannel().writeAndFlush(response);
+
+                        // 如果用户不是创建者，并且群组名以 "@" 开头或者全员退群，则通知用户退出群组
+                        if ((group.getName().startsWith("@") || SessionManagerImpl.this.allUserQuitGroup) && !Objects.equals(group.getCreatorId(), user.getId())) {
+                           Response quitResponse = SessionManagerImpl.this.getProtocol(userSession).createResponse(Cmd.QUIT_GROUP_RESP);
+                           quitResponse.setAttr("msgtype", "userquit");
+                           quitResponse.setAttr("groupid", group.getId());
+                           quitResponse.setAttr("userid", userId);
+                           userSession.getChannel().writeAndFlush(quitResponse);
+                        }
+                     }
+
+                     // 如果用户不是创建者，并且群组名以 "@" 开头或者全员退群，则让用户退出群组
+                     if ((group.getName().startsWith("@") || SessionManagerImpl.this.allUserQuitGroup) && !Objects.equals(group.getCreatorId(), user.getId())) {
                         SessionManagerImpl.this.groupManager.quitGroup(user, group);
                      }
                   }
                }
 
-               mydiedai = SessionManagerImpl.this.listeners.iterator();
 
-               while(mydiedai.hasNext()) {
-                  SessionListener listener = (SessionListener)mydiedai.next();
+
+               //源代码
+//               if (SessionManagerImpl.this.sessions.get(userId) == this && userId > 0) {
+//                  for (User tmpuser : userManager.getUserFriends(userId)) {
+//                     Session session1x = SessionManagerImpl.this.getSession(tmpuser.getId());
+//                     if (session1x != null) {
+//                        Response response = SessionManagerImpl.this.getProtocol(session1x).createResponse(Cmd.OFFLINE_TELL_RESP);
+//                        response.setAttr("who", userId);
+//                        session1x.getChannel().writeAndFlush(response);
+//                     }
+//                  }
+//
+//                  List<Group> groups = groupManager.getGroupByUserId(userId);
+//                  Iterator i$ = groups.iterator();
+//
+//                  label76:
+//                  while(true) {
+//                     Group group;
+//                     label74:
+//                     do {
+//                        if (!i$.hasNext()) {
+//                           break label76;
+//                        }
+//
+//                        group = (Group)i$.next();
+//                        //
+//                        Iterator i$xx = userManager.getUserByGroupId(group.getId()).iterator();//group.getUsers().iterator();
+//
+//                        while(true) {
+//                           Session session1;
+//                           do {
+//                              User user1;
+//                              int useridtmpid;
+//                              do {
+//                                 if (!i$xx.hasNext()) {
+//                                    continue label74;
+//                                 }
+//
+//                                 user1 = (User)i$xx.next();
+//                                 useridtmpid = user1.getId();
+//                              } while(userId == useridtmpid);
+//
+//                              session1 = SessionManagerImpl.this.getSession(user1.getId());
+//                           } while(session1 == null);
+//
+//                           Response response2;
+//                           if ((group.getName().startsWith("@") || SessionManagerImpl.this.allUserQuitGroup) && !Objects.equals(group.getCreatorId(), user.getId())) {
+//                              response2 = SessionManagerImpl.this.getProtocol(session1).createResponse(Cmd.QUIT_GROUP_RESP);
+//                              response2.setAttr("msgtype", "userquit");
+//                              response2.setAttr("groupid", group.getId());
+//                              response2.setAttr("userid", userId);
+//                              session1.getChannel().writeAndFlush(response2);
+//                           }
+//
+//                           response2 = SessionManagerImpl.this.getProtocol(session1).createResponse(Cmd.OFFLINE_TELL_RESP);
+//                           response2.setAttr("who", userId);
+//                           session1.getChannel().writeAndFlush(response2);
+//                        }
+//                     } while(!group.getName().startsWith("@") && !SessionManagerImpl.this.allUserQuitGroup);
+//
+//                     if (!Objects.equals(group.getCreatorId(), user.getId())) {
+//                        SessionManagerImpl.this.groupManager.quitGroup(user, group);
+//                     }
+//                  }
+//               }
+
+               for (SessionListener listener : SessionManagerImpl.this.listeners) {
                   listener.onDestroy(this);
                }
 
@@ -193,11 +236,8 @@ public final class SessionManagerImpl implements SessionManager, DisposableBean 
          }
       };
       this.sessions.put(userId, session);
-      Iterator i$ = this.listeners.iterator();
 
-      while(i$.hasNext()) {
-         SessionListener listener = (SessionListener)i$.next();
-
+      for (SessionListener listener : this.listeners) {
          try {
             listener.onCreate(session);
          } catch (Exception var8) {
@@ -248,26 +288,16 @@ public final class SessionManagerImpl implements SessionManager, DisposableBean 
          Protocol protocol = this.getProtocol(session);
          Response response1 = protocol.createResponse(Cmd.SERVER_SEND_TO_CLIENT);
          response1.setAttr("message", message);
-         if (session != null) {
-            session.getChannel().writeAndFlush(response1);
-            return true;
-         } else {
-            return false;
-         }
+         session.getChannel().writeAndFlush(response1);
+         return true;
       }
    }
 
    @Override
    public void destroy() throws Exception {
-      Iterator i$ = this.sessions.values().iterator();
 
-      while(i$.hasNext()) {
-         Session session = (Session)i$.next();
-         Iterator diedai = this.listeners.iterator();
-
-         while(diedai.hasNext()) {
-            SessionListener listener = (SessionListener)diedai.next();
-
+      for (Session session : this.sessions.values()) {
+         for (SessionListener listener : this.listeners) {
             try {
                listener.onDestroy(session);
             } catch (Exception var6) {

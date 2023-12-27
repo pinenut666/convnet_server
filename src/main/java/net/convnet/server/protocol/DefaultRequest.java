@@ -1,11 +1,12 @@
 package net.convnet.server.protocol;
 
 import com.alibaba.fastjson.JSONObject;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-
+@ToString
 public final class DefaultRequest implements Request, RequestBuilder, Serializable {
    private static final long serialVersionUID = 3348082539153902075L;
    private final Map<String, Object> attrs = new HashMap();

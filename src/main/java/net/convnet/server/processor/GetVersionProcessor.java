@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class GetVersionProcessor extends AbstractProcessor {
-   @Value("#{props.updateURL}")
+   @Value("${props.updateURL}")
    private String updateURL;
 
    @Override

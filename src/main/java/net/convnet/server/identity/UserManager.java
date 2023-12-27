@@ -1,5 +1,7 @@
 package net.convnet.server.identity;
 
+import net.convnet.server.common.page.PageRequest;
+import net.convnet.server.common.page.PageResult;
 import net.convnet.server.ex.ConvnetException;
 import net.convnet.server.mybatis.pojo.FriendRequest;
 import net.convnet.server.mybatis.pojo.User;
@@ -50,4 +52,6 @@ public interface UserManager {
    void dealFriendRequest(int var1, int var2, boolean var3);
    //删除好友
    void deleteFriend(int userid,int friendid);
+
+    PageResult findPage(PageRequest pageRequest);
 }

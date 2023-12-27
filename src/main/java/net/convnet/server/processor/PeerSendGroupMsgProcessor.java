@@ -23,10 +23,8 @@ public class PeerSendGroupMsgProcessor extends AbstractProcessor {
    public void process(Session session, Request request, Response response) throws ConvnetException {
       int targetgroupid = request.getIntParam("groupid");
       Group targetgroup = this.groupManager.getGroup(targetgroupid);
-      Iterator i$ = userManager.getUserByGroupId(targetgroup.getId()).iterator();
 
-      while(i$.hasNext()) {
-         User targetuser = (User)i$.next();
+      for (User targetuser : userManager.getUserByGroupId(targetgroup.getId())) {
          int targetuserid = targetuser.getId();
          Session targetsession = this.sessionManager.getSession(targetuserid);
          response.setOutput(false);

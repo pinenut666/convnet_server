@@ -49,7 +49,7 @@ public class UdpPortDetectServer implements Lifecycle, InitializingBean, Disposa
                bootstrap.bind(port).sync();
             }
 
-            LOG.info("------ Convnet server listening on [{}:{}] ready to serve ------", Arrays.toString(this.ports));
+            LOG.info("------ Convnet server listening on [{}:{}] ready to serve ------", "0.0.0.0",Arrays.toString(this.ports));
             this.running = true;
          } catch (Throwable e) {
             LOG.error("Server startup error", e);

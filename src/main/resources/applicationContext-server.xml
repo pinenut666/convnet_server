@@ -15,24 +15,9 @@
         <property name="fileEncoding" value="utf-8"/>
     </bean>
 
-    <bean class="net.convnet.server.support.message.NLS">
-        <property name="messageProvider">
-            <bean class="net.convnet.server.support.message.SpringMessageProvider">
-                <property name="messageSource" ref="messageSource"/>
-            </bean>
-        </property>
-    </bean>
 
     <context:property-placeholder properties-ref="props"/>
 
-    <bean id="encryptService" class="net.convnet.server.support.encrypt.RSAEncryptServiceImpl">
-        <property name="encryptKey"
-                  value="MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBALa0vNfgloabI7gj9QxJlv/3wAId/W2sXVK4BQ4kt+9LsS7L7rbsCAQc695zqJqyiit++ITl6Fz/Oakz5vDsDtGAn2Eh/OP6lmPEop9Smafn7D9pFlJuVpjD6zt5a+M5ar2zkz/IGv0il0TYzLrUQKghTiSQP5DU43qV1v7+1LUBAgMBAAECgYEAjZMJjgJCwbUvfX2nYckYT+pLh5hzi2t3uSRNDoOXX774Yfm2VVoacA11HB/lM1JLzJ6LtndskbtXk+xa9K8GXzN/7ekyDBpRVm4uSYgcFzcr00Rs8EipmF24JTad1RSAVG7lp7dUZEgJeMYFhO1+MIhvkFFTUriC92avq+ReW9ECQQDflJJRgp1u+gl2n6We+AuVmZeKIIc00uoP9wJSqaOG6LVUpP8ERZYeo+fXx9odlUV8RNCwXWvq8GUXwaoc0y/tAkEA0TLjIl1iPn7X+w/84W5jBgqYvxrKqDOUc9wC6nZkfDlJGMtD1HvR2nqmrnxCprGbGfK5iwtQdE2NG8Ro3D9u5QJACsimugm7wDONK0yN93ntTRzoY0AoZVLa+UQnt4b5HTOyM0/2AOW+VOIA97Zq/cxKWrETA76tytondhrgMp25DQJAaMedHiQ5xeWQVg6O8XZxoKAEG4vWv2J+U3159GdyMwoaQ5HjmnSeCljuTWytkYJZliiNqEf1dxs0txisEMywxQJAE//uQXCZ+HRqeKQ3ckb1xYcXzqzuSCA1xdWhr+g81BQ5DvsARrg72aGTnCfkXfxwDfSa9qRPtFkuA8krc7g+7Q=="/>
-    </bean>
-
-    <bean id="userManager" class="net.convnet.server.identity.impl.UserManagerImpl">
-        <property name="encryptService" ref="encryptService"/>
-    </bean>
 
     <bean id="cm" abstract="true" class="net.convnet.server.protocol.bin.CoderMapping"/>
 

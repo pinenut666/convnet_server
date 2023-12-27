@@ -31,7 +31,7 @@ public class CheckNatTypeProcessor extends AbstractProcessor {
          Writer writer = new PrintWriter(socket.getOutputStream());
          writer.write("Hello Convnet\n");
          writer.flush();
-      } catch (IOException var13) {
+      } catch (IOException ignored) {
       }
 
       try {
@@ -40,8 +40,7 @@ public class CheckNatTypeProcessor extends AbstractProcessor {
          InetAddress ineta = InetAddress.getByName(session.getIp());
          DatagramPacket sendPacket = new DatagramPacket(cmd.getBytes(), cmd.getBytes().length, ineta, udpport);
          clientSocket.send(sendPacket);
-      } catch (SocketException var11) {
-      } catch (IOException var12) {
+      } catch (IOException ignored) {
       }
 
    }

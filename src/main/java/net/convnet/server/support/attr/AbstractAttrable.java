@@ -70,7 +70,7 @@ public abstract class AbstractAttrable implements Attrable {
 
    @Override
    public Map<String, String> getAttrs(String... keys) {
-      return this.getAttrs((Collection)(keys == null ? Collections.EMPTY_LIST : Arrays.asList(keys)));
+      return this.getAttrs(keys == null ? Collections.EMPTY_LIST : Arrays.asList(keys));
    }
 
    @Override
@@ -80,10 +80,9 @@ public abstract class AbstractAttrable implements Attrable {
       }
 
       Map<String, String> map = Maps.newHashMapWithExpectedSize(((Collection)keys).size());
-      Iterator i$ = ((Collection)keys).iterator();
 
-      while(i$.hasNext()) {
-         String key = (String)i$.next();
+      for (Object o : (Collection) keys) {
+         String key = (String) o;
          String value = this.getAttr(key);
          if (value != null) {
             map.put(key, value);
@@ -95,11 +94,10 @@ public abstract class AbstractAttrable implements Attrable {
 
    @Override
    public void setAttrs(Map<String, ?> map) {
-      Iterator i$ = map.entrySet().iterator();
 
-      while(i$.hasNext()) {
-         Entry<String, ?> entry = (Entry)i$.next();
-         this.setAttr((String)entry.getKey(), entry.getValue());
+      for (Entry<String, ?> stringEntry : map.entrySet()) {
+         Entry<String, ?> entry = (Entry) stringEntry;
+         this.setAttr((String) entry.getKey(), entry.getValue());
       }
 
    }

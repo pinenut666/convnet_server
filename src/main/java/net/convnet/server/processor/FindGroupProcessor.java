@@ -23,7 +23,7 @@ public class FindGroupProcessor extends AbstractProcessor {
       if (user.SoIfICanAddfriend()) {
          response.setAttr("groups", this.groupManager.findGroup(FindType.from(request.getParam("type")), request.getParam("value"), 20));
       } else {
-         response.setAttr("groups", (Object)null);
+         response.setAttr("groups", null);
       }
 
    }

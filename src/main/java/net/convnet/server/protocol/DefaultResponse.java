@@ -1,9 +1,11 @@
 package net.convnet.server.protocol;
 
+import lombok.ToString;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-
+@ToString
 public final class DefaultResponse implements Response, Serializable {
    private static final long serialVersionUID = 3092376853691143104L;
    private final Map<String, Object> attrs = new HashMap();

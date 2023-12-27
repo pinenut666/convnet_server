@@ -20,19 +20,19 @@ import java.util.Date;
 
 @Service
 public class RegisterProcessor extends AbstractProcessor {
-   @Value("#{props.allowregist}")
+   @Value("${props.allowregist}")
    private boolean allowregist;
-   @Value("#{props.canCreateGroup}")
+   @Value("${props.canCreateGroup}")
    private boolean canCreateGroup;
-   @Value("#{props.canJoinGroup}")
+   @Value("${props.canJoinGroup}")
    private boolean canJoinGroup;
    @Autowired
    private ResetCodeManager resetCodeManager;
-   @Value("#{props['reset.url']}")
+   @Value("${props.reset.url}")
    private String resetUrl;
-   @Value("#{props['forceUseMailCheck']}")
+   @Value("${props.forceUseMailCheck}")
    private boolean forceUseMailCheck;
-   @Value("#{props['maxRigistCount']}")
+   @Value("${props.maxRigistCount}")
    private int maxRigistCount;
    @Autowired
    private EmailSender emailSender;

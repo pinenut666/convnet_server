@@ -27,9 +27,6 @@ public interface UserManager {
 
    //查找用户请求列表
    List<FriendRequest> getUserFriendRequests(Integer userid);
-
-   //TODO:不同Page需要兼容，观察是否可以将其转换为前后端分离，或不分离怎么好用怎么来~
-   //Page<User> findUser(String var1, Pageable var2, boolean var3);
    //添加用户
    boolean addGroupToUser(Integer userid,Integer groupid);
    //验证用户

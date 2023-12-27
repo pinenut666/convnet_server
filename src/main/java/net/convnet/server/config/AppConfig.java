@@ -137,21 +137,11 @@ public class AppConfig extends AbstractConfig {
         coderMappings.add(createCoderMapping(Cmd.PEER_ORD_FRIEND, Cmd.PEER_ORD_FRIEND_RESP, "count,userId,nickName,description", "id,description"));
         coderMappings.add(createCoderMapping(Cmd.PEER_SURE_FRIEND, Cmd.PEER_SURE_FRIEND_RESP, "id,name,isonline", "id"));
         coderMappings.add(createCoderMapping(Cmd.DEL_FRIEND, Cmd.DEL_FRIEND_RESP, "id", "id"));
-        // 转换第一个 XML 片段
         coderMappings.add(createCoderMapping(Cmd.PEER_REFUSED_FRIEND, Cmd.PEER_REFUSED_FRIEND_RESP, "", "id"));
-// 转换第二个 XML 片段
         coderMappings.add(createCoderMapping(null, Cmd.SERVER_SEND_TO_CLIENT, "message", ""));
-
-// 转换第三个 XML 片段
         coderMappings.add(createCoderMapping(Cmd.SAMEIP_INFO, Cmd.SAMEIP_INFO_RESP, "callerid,callerudpport,callertcpport,callermac,callerinnerip", "targetid,myudpport,mytcpport,mymac,myinnerip"));
-
-// 转换第四个 XML 片段
         coderMappings.add(createCoderMapping(null, Cmd.USER_NEED_PASS, "id", ""));
-
-// 转换第五个 XML 片段
         coderMappings.add(createCoderMapping(Cmd.ONLINE_TELL, null, "userid", ""));
-
-// 转换第六个 XML 片段
         coderMappings.add(createCoderMapping(Cmd.CREATE_GROUP, Cmd.CREATE_GROUP_RESP, "iscreated","groupname,groupdesc,gourppass"));
 
 

@@ -22,7 +22,7 @@ final class PacketEncoder extends MessageToByteEncoder<ResponseReader> {
 
    @Override
    protected void encode(ChannelHandlerContext ctx, ResponseReader reader, ByteBuf out) throws Exception {
-      LOG.debug("Response send is" + reader);
+      LOG.debug("Response send is " + reader);
       int start = out.writerIndex();
       //out.writeInt(0) 的作用是在传输流中写入一个 int 类型的值 0。它的作用在于在编码数据包之前，先向传输流中写入一个占位值，占用 4 个字节的空间。
       out.writeInt(0);

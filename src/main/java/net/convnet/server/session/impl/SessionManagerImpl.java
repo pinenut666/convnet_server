@@ -151,7 +151,7 @@ public final class SessionManagerImpl implements SessionManager, DisposableBean 
 
 
 
-               //满足这些条件时
+               //源代码
 //               if (SessionManagerImpl.this.sessions.get(userId) == this && userId > 0) {
 //                  for (User tmpuser : userManager.getUserFriends(userId)) {
 //                     Session session1x = SessionManagerImpl.this.getSession(tmpuser.getId());
@@ -288,12 +288,8 @@ public final class SessionManagerImpl implements SessionManager, DisposableBean 
          Protocol protocol = this.getProtocol(session);
          Response response1 = protocol.createResponse(Cmd.SERVER_SEND_TO_CLIENT);
          response1.setAttr("message", message);
-         if (session != null) {
-            session.getChannel().writeAndFlush(response1);
-            return true;
-         } else {
-            return false;
-         }
+         session.getChannel().writeAndFlush(response1);
+         return true;
       }
    }
 

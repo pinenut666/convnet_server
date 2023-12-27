@@ -2,7 +2,9 @@ package net.convnet.server.mybatis.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import net.convnet.server.mybatis.cache.MybatisCache;
 import net.convnet.server.mybatis.pojo.User;
+import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -19,6 +21,7 @@ import java.util.Date;
  * @since 2023-01-17
  */
 @Mapper
+@CacheNamespace(implementation= MybatisCache.class,eviction=MybatisCache.class)
 public interface UserMapper extends BaseMapper<User> {
 
 }

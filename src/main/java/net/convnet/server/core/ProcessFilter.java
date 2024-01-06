@@ -10,10 +10,11 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 final class ProcessFilter extends AbstractFilter {
    private static final Logger LOG = LoggerFactory.getLogger(ProcessFilter.class);
-   private final Map<Cmd, Processor> processors = new HashMap();
+   private final Map<Cmd, Processor> processors = new ConcurrentHashMap<>();
 
    ProcessFilter(Collection<Processor> processors) {
 
@@ -25,7 +26,7 @@ final class ProcessFilter extends AbstractFilter {
 
    @Override
    public void doFilter(Session session, Request request, Response response, FilterChain chain) throws ConvnetException {
-      Processor processor = (Processor)this.processors.get(request.getCmd());
+      Processor processor = this.processors.get(request.getCmd());
       if (processor != null) {
          processor.process(session, request, response);
       } else {

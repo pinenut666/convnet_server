@@ -100,13 +100,12 @@ public class GroupManagerImpl implements GroupManager {
       //return (Group)this.getByNaturalId("name", groupName);
       return groupMapper.selectOne(wrapper);
    }
-   //根据查询信息查询组，看上去像是给前端查询对应分组用的。
-   //默认现在是一次查询20条——似乎某人并没有做分页的样子
+
    @Override
    public List<Group> findGroup(FindType type, String value, int size) {
       String fieldName = null;
       switch(type) {
-      case NICK_NAME:
+      case NAME:
          fieldName = "name";
          break;
       case DESCRIPTION:

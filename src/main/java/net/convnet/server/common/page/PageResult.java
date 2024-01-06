@@ -3,6 +3,7 @@ package net.convnet.server.common.page;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import java.util.List;
+
 public class PageResult {
     /**
      * 当前页码

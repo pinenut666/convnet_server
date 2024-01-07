@@ -68,9 +68,8 @@ public final class Server implements Lifecycle, InitializingBean, DisposableBean
          bootstrap.group(this.bossGroup, this.workerGroup).channel(NioServerSocketChannel.class);
          //加载对应的处理器集合
          bootstrap.childHandler(this.serverInitializer);
-         //版本更新之后需要换成childOption，打开TCP_NODELAY
+         //版本更新之后需要换成childOption，打开TCP_NODELAY，即Nagle算法
          bootstrap.childOption(ChannelOption.TCP_NODELAY, true);
-
          try {
             //绑定对应接口并运行
             bootstrap.bind(this.serverAddress, this.serverPort).sync();

@@ -158,6 +158,10 @@ public enum Cmd {
 
    public static final Set<Cmd> ANONYMOUS_CMDS = Sets.newHashSet(LOGIN, REGIST_USER, HANDSHAKE, KEEP_ONLINE);
 
+   /**
+    * 转换对应的命令名称为它的字符串序数（如第一个指令是0）。
+    * @return {@link String}
+    */
    public String toOrdinal() {
       return String.valueOf(this.ordinal());
    }

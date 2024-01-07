@@ -77,8 +77,8 @@ final class ConvnetHandler extends ChannelInboundHandlerAdapter {
                 Protocol protocol = this.protocolFactory.getProtocol(request.getVersion());
                 //根据对应实现创建回复消息
                 Response response = protocol.createResponse(cmd);
-
                 try {
+                    //尝试进行处理，如果处理失败则抛出异常
                     this.filterChain.doFilter(session, request, response);
                 } catch (Throwable var9) {
                     if (LOG.isInfoEnabled()) {
@@ -87,7 +87,7 @@ final class ConvnetHandler extends ChannelInboundHandlerAdapter {
 
                     response.setSuccess(false);
                 }
-
+                //如果回复需要输出，则将输出输出到回复中
                 if (response.needOutput()) {
                     ctx.write(response);
                 }

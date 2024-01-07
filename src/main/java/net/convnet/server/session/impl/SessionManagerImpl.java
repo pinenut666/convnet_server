@@ -294,7 +294,7 @@ public final class SessionManagerImpl implements SessionManager, DisposableBean 
    }
 
    @Override
-   public void destroy() throws Exception {
+   public void destroy() {
 
       for (Session session : this.sessions.values()) {
          for (SessionListener listener : this.listeners) {

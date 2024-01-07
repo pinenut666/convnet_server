@@ -25,7 +25,7 @@ final class PacketDecoder extends LengthFieldBasedFrameDecoder {
         //构造发送数据包最长为51200字节，长度域偏移量为0，长度域字节数为4，长度域偏移量矫正为0，丢弃的起始字节数为4。
         //也就是说，一个包前面四个字节是长度域，后面是发送的数据，这也就解释了DEBUG模式下输出前面解析的是乱码的情况。
         super(51200, 0, 4, 0, 4);
-        //创建SessionManager
+        //创建SessionManager，以用于处理会话管理
         this.sessionManager = sessionManager;
     }
 

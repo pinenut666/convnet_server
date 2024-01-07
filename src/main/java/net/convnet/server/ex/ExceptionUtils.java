@@ -1,5 +1,6 @@
 package net.convnet.server.ex;
 
+import cn.hutool.core.exceptions.ExceptionUtil;
 import net.convnet.server.support.message.NLS;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.NestedRuntimeException;
@@ -24,6 +25,7 @@ public class ExceptionUtils {
 
    public static String buildMessage(int code, Object[] args, String defaultMessage, Throwable cause) {
       String message = null;
+      // TODO：找到相关国际化
       if (code != 1) {
          message = NLS.getMessage("error." + code, args, null);
       }

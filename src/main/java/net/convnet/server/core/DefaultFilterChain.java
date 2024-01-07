@@ -21,7 +21,7 @@ final class DefaultFilterChain implements FilterChain {
       (new Chain(this.filters.iterator())).doFilter(session, request, response);
    }
 
-   private final class Chain implements FilterChain {
+   private static final class Chain implements FilterChain {
       private Iterator<Filter> filtersIterator;
 
       public Chain(Iterator<Filter> filtersIterator) {

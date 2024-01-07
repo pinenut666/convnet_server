@@ -47,7 +47,7 @@ public final class BinaryPacket {
    }
 
    public BinaryPacket end(Object part) {
-      this.parts.add('*');
+      this.parts.add("*");
       this.parts.add(part);
       return this;
    }

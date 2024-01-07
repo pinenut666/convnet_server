@@ -2,6 +2,12 @@ package net.convnet.server.util;
 
 import java.util.HashMap;
 
+/**
+ * 属性Map，这是一个HashMap的简单封装。
+ *
+ * @author Administrator
+ * @date 2024/01/07
+ */
 public final class AttrMap extends HashMap<String, Object> {
    private static final long serialVersionUID = 52850833589542098L;
 

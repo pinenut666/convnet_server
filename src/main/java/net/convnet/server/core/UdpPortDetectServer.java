@@ -33,19 +33,23 @@ public class UdpPortDetectServer implements Lifecycle, InitializingBean, Disposa
          LOG.info("Already running");
       } else {
          LOG.info("------ Attempt to start udpPortDetectServer server on [{}] ------", Arrays.toString(this.ports));
-
          try {
+            // 创建Bootstrap
             Bootstrap bootstrap = new Bootstrap();
             bootstrap.group(this.group).channel(NioDatagramChannel.class);
+            // 创建UDP辅助握手（2个端口）
             int[] portslist = this.ports;
-
+            // 对多个端口启动辅助握手
             for (int port : portslist) {
                bootstrap.handler(new SimpleChannelInboundHandler<DatagramPacket>() {
                   @Override
+                  //辅助握手端口所做的功能：当收到请求时，将对方请求的端口号封装并发送回发送者。
+                  //此时用户端将会得到自己NAT转发后的端口号。（理论上，地址是很容易得到的。）
                   protected void channelRead0(ChannelHandlerContext ctx, DatagramPacket packet) {
                      ctx.writeAndFlush(new DatagramPacket(Unpooled.copiedBuffer(String.valueOf(packet.sender().getPort()), CharsetUtil.UTF_8), packet.sender()));
                   }
                });
+               //绑定
                bootstrap.bind(port).sync();
             }
 
@@ -62,7 +66,7 @@ public class UdpPortDetectServer implements Lifecycle, InitializingBean, Disposa
    public void stop() {
       if (this.running) {
          this.group.shutdownGracefully();
-         LOG.info("---- Convnet udpPortDetectServer shutdown successfully ----", Arrays.toString(this.ports));
+         LOG.info("---- Convnet udpPortDetectServer on port {} shutdown successfully ----", Arrays.toString(this.ports));
       }
 
    }
@@ -73,12 +77,12 @@ public class UdpPortDetectServer implements Lifecycle, InitializingBean, Disposa
    }
 
    @Override
-   public void destroy() throws Exception {
+   public void destroy() {
       this.stop();
    }
 
    @Override
-   public void afterPropertiesSet() throws Exception {
+   public void afterPropertiesSet() {
       this.group = new NioEventLoopGroup();
       this.start();
    }

@@ -8,7 +8,6 @@ import java.util.concurrent.Future;
 
 @Service
 public class EmailSenderImpl implements EmailSender{
-    //为了方便，使用hutool重写一个，相比魔改来讲优雅而简洁……
     @Override
     public Future<Email> send(Email var1) {
         //设置发送方

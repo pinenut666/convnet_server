@@ -11,6 +11,12 @@ import net.convnet.server.protocol.ResponseReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * CVN数据包编码器
+ *
+ * @author Administrator
+ * @date 2024/01/06
+ */
 @Sharable
 final class PacketEncoder extends MessageToByteEncoder<ResponseReader> {
    private static final Logger LOG = LoggerFactory.getLogger(PacketEncoder.class);
@@ -24,7 +30,8 @@ final class PacketEncoder extends MessageToByteEncoder<ResponseReader> {
    protected void encode(ChannelHandlerContext ctx, ResponseReader reader, ByteBuf out) throws Exception {
       LOG.debug("Response send is " + reader);
       int start = out.writerIndex();
-      //out.writeInt(0) 的作用是在传输流中写入一个 int 类型的值 0。它的作用在于在编码数据包之前，先向传输流中写入一个占位值，占用 4 个字节的空间。
+      //out.writeInt(0) 的作用是在传输流中写入一个 int 类型的值 0。
+      // 它的作用在于在编码数据包之前，先向传输流中写入一个占位值，占用 4 个字节的空间。
       out.writeInt(0);
       Protocol protocol = this.protocolFactory.getProtocol(reader.getVersion());
       protocol.encode(reader, out);
